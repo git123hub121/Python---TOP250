@@ -1,0 +1,5242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据可视化-豆瓣电影Top250</title>
+    <style>
+        body::-webkit-scrollbar {
+    display: none;
+}
+.BMap_cpyCtrl {
+   display: none;
+}
+
+.anchorBL {
+   display: none;
+}
+.yui-toast-mask {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0);
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.yui-toast-mask .yui-toast {
+    background: rgba(0, 0, 0, 0.5);
+    min-height: 3rem;
+    min-width: 3rem;
+    border-radius: .5rem;
+    margin: 0 auto;
+    overflow: hidden;
+    color: #FFFFFF;
+    font-size: 14px;
+    padding: 10px;
+    max-height: 90%;
+    max-width: 90%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+}
+/* CSS Document */
+::-webkit-scrollbar-track{border-radius: 10px;-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);}/*滚动条的滑轨背景颜色*/
+::-webkit-scrollbar-thumb{background-color: rgba(0,0,0,0.05);border-radius: 10px;-webkit-box-shadow: inset 1px 1px 0 rgba(75, 75, 75, 0.58);}/*滑块颜色*/
+::-webkit-scrollbar-thumb{background-color: rgba(0,0,0,0.2);border-radius: 10px;-webkit-box-shadow: inset 1px 1px 0 rgba(48, 48, 48, 0.92);}
+::-webkit-scrollbar{width: 16px;height: 16px;}/* 滑块整体设置*/
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb{border-radius: 999px;border: 5px solid transparent;}
+::-webkit-scrollbar-track{box-shadow: 1px 1px 5px rgba(0,0,0,.2) inset;}
+::-webkit-scrollbar-thumb{min-height: 20px;background-clip: content-box;box-shadow: 0 0 0 5px rgba(255,255,255,.5) inset;}
+::-webkit-scrollbar-corner{background: transparent;}/* 横向滚动条和纵向滚动条相交处尖角的颜色 */
+
+body{
+    font-size: 100%;
+    height: 100%;
+    background-color: #081832;
+}
+a:hover{
+    text-decoration: none;
+}
+.left{
+    float: left;
+}
+.right{
+    float: right;
+}
+.clear{
+    clear: both;
+}
+
+.text_right{
+    text-align: right;
+}
+.header{
+    width: 100%;
+    height: 80px;
+    background-color: #030829;
+
+}
+.header_center{
+    width: 30%;
+    margin: 0px auto;
+    color: #FFFFff;
+    text-align: center;
+    height: 80px;
+    background-image: url("../images/logoBg.png");
+    background-size: 100% 100%;
+    font-family: "微软雅黑"!important;
+
+
+}
+.header_center h2{
+   margin-top: 16px !important;
+   font-size: 22px !important;
+
+}
+.color_font{
+    color: #e8f7fe !important;
+    font-size: 12px !important;
+}
+.header_logo{
+    margin-left: 1%;
+    margin-top: 12px;
+
+}
+.header_logo img{
+    height: 56px;
+}
+.nav{
+
+    width: 35%;
+}
+.nav>ul{
+
+}
+.nav>ul>li{
+    display: inline-block;
+    width: 120px;
+    text-align: center;
+    height: 50px;
+    position: relative;
+    line-height: 50px;
+    margin-top: 15px;
+    box-sizing: border-box;
+    /*box-shadow: -5px 0px 5px #034c6a inset, !*å·¦è¾¹é˜´å½±*!*/
+    /*0px -5px 15px #034c6a inset, !*ä¸Šè¾¹é˜´å½±*!*/
+    /*5px 0px 15px #034c6a inset, !*å³è¾¹é˜´å½±*!*/
+    /*0px 5px 15px #034c6a inset;*/
+
+
+    border-radius: 5px;
+
+}
+.nav>ul>li:hover{
+    box-shadow: -10px 0px 15px #034c6a inset, /*å·¦è¾¹é˜´å½±*/
+    0px -10px 15px #034c6a inset, /*ä¸Šè¾¹é˜´å½±*/
+    10px 0px 15px #034c6a inset, /*å³è¾¹é˜´å½±*/
+    0px 10px 15px #034c6a inset;
+
+    box-sizing: border-box;
+}
+.nav>ul>li i{
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    position: relative;
+    top:3px;
+    margin-right: 5px;
+}
+.nav>ul>li>a{
+    color: #ffffff;
+    /*display: inline-block;*/
+    /*padding: 0 15px 0 5px;*/
+    font-size: 14px;
+}
+/*.nav>ul>li:hover .li_ul{*/
+    /*display: block;*/
+/*}*/
+
+.li_ul{
+    position: absolute;
+    background-color: #030829;
+    width: 100%;
+    /*border-top:4px solid #4b8df8;*/
+    display: none;
+    z-index: 999;
+
+}
+.li_ul li{
+    line-height: 40px !important;
+}
+.li_ul li:hover{
+    background-color: #4b8df8;
+}
+.li_ul li a{
+    color: #ffffff;
+    font-size: 13px;
+}
+
+.nav_1{
+     background: url("../images/nav_1.png");
+ }
+.nav_2{
+    background-image: url("../images/nav_2.png");
+}
+.nav_3{
+    background-image: url("../images/nav_3.png");
+
+}
+.nav_4{
+    background-image: url("../img/nav_4.png");
+}
+.nav_5{
+    background-image: url("../img/nav_5.png");
+}
+.nav_6{
+    background-image: url("../img/nav_6.png");
+}
+.nav_7{
+    background-image: url("../img/nav_7.png");
+}
+.nav_8{
+    background-image: url("../img/nav_9.png");
+}
+.nav_active{
+    border-bottom: 4px solid #4b8df8;
+    box-shadow: -10px 0px 15px #034c6a inset, /*å·¦è¾¹é˜´å½±*/
+    0px -10px 15px #034c6a inset, /*ä¸Šè¾¹é˜´å½±*/
+    10px 0px 15px #034c6a inset, /*å³è¾¹é˜´å½±*/
+    0px 10px 15px #034c6a inset;
+
+    box-sizing: border-box;
+}
+.con{
+    width: 100%;
+    background-color: #081832;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.con1{
+    width: 100%;
+    background-color: #081832cc;
+    /*padding-bottom: 4px;*/
+    box-sizing: border-box;
+    overflow: auto;
+
+;
+}
+.find_expend{
+    display: none;
+}
+.con1::before{
+    content: "";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    height: 0;
+}
+.select_time{
+    width: 140px;
+    height: 36px;
+
+    margin-bottom: 25px;
+    margin-left: 1%;
+   padding-left: 20px;
+ ;
+
+}
+.select_time img{
+    height: 18px;
+    margin-top: 9px;
+}
+.select_time input{
+    border: none;
+    background-color: transparent;
+    width: 80px;
+    height: 20px;
+   top:-5px;
+    margin-left: 10px;
+    position: relative;
+    text-indent: 1em;
+    outline: none;
+}
+.con_div{
+    height: 110px;
+    width: 98%;
+    margin-left: 1.6%;
+    margin-bottom: 25px;
+}
+.con_div_text{
+    height: 100%;
+    background-color: #034c6a;
+    width: 32%;
+    margin-right: 1.3%;
+}
+.con_div_text01{
+    width: 50%;
+    height: 100%;
+    text-align: center;
+}
+.text01_img{
+    width: 40px;
+    height: 40px;
+    margin-left: 5%;
+  margin-top: 35px;
+}
+.text01_div{
+    margin-top: 15px;
+    margin-left: 5%;
+    text-align: center;
+
+}
+.text01_div p{
+    line-height: 35px;
+}
+.text01_div p:nth-child(1){
+    font-size: 13px;
+    color: #ffffff;
+}
+.text01_div p:nth-child(2){
+    font-size: 28px;
+    color: #ffff43;
+    font-weight: 600;
+
+}
+.red{
+    color: red !important;
+}
+.sky{
+    color: #25f3e6 !important;
+}
+.org{
+    color: #ff4e4e !important;
+}
+.div_any{
+    width: 98%;
+    margin-left: 1%;
+    margin-bottom: 25px;
+    height: 610px;
+}
+.div_any01{
+    width: 46%;
+    margin-left: 2.5%;
+}
+.div_any02{
+    width: 48%;
+    margin-right: 2%;
+}
+.div_any03{
+    width: 98%;
+   margin: 15px auto;
+
+}
+.div_any_child{
+    width: 100%;
+    height: 380px;
+    box-shadow: -10px 0px 15px #034c6a inset, /*å·¦è¾¹é˜´å½±*/
+    0px -10px 15px #034c6a inset, /*ä¸Šè¾¹é˜´å½±*/
+    10px 0px 15px #034c6a inset, /*å³è¾¹é˜´å½±*/
+    0px 10px 15px #034c6a inset;
+    border: 1px solid #034c6a;
+    box-sizing: border-box;
+    position: relative;
+    margin-top: 25px;
+    /* margin-bottom: 40px; */
+}
+.div_any_child01{
+    width: 48%;
+
+    box-shadow: -10px 0px 15px #034c6a inset, /*å·¦è¾¹é˜´å½±*/
+    0px -10px 15px #034c6a inset, /*ä¸Šè¾¹é˜´å½±*/
+    10px 0px 15px #034c6a inset, /*å³è¾¹é˜´å½±*/
+    0px 10px 15px #034c6a inset;
+    border: 1px solid #034c6a;
+    box-sizing: border-box;
+    position: relative;
+    margin-right: 2%;
+
+}
+.div_any_child01_wh{
+    width: 98% !important;
+}
+.div_height01{
+    height: auto !important;
+    padding: 5px;
+}
+.char_table{
+    height: 200px;
+}
+.p_chart{
+    height: 288px;
+
+    padding: 5px 10px;
+
+    margin-top: 15px;
+
+}
+#map_div{
+    width: 96%;
+    height: 94%;
+}
+.div_height{
+    height:685px !important;
+}
+.div_any_title{
+    background-color: #034c6a;
+    border-radius: 18px;
+    position: absolute;
+    height: 35px;
+    width: 60%;
+    top:-15px;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+    left: 20%;
+    line-height: 35px;
+    text-align: center;
+}
+.div_any_title img{
+    width: 18px;
+    height: 18px;
+    position: relative;
+    top:2px;
+    margin-right: 5px;
+}
+.any_title_width{
+    width: 30% !important;
+    left: 35% !important;
+}
+.div_table{
+    width: 98%;
+    margin-left: 1%;
+    margin-bottom: 25px;
+    height: 280px;
+}
+.div_table_box{
+    width: 23%;
+    margin-right: 2%;
+}
+.table_p{
+    height: 93%;
+    margin-top: 7%;
+    position: relative;
+
+
+}.table_p01{
+     height:auto !important;
+     margin-top: 0!important;
+     position: relative;
+
+
+ }
+.table_p01 table td{
+    padding: 6px 0;
+}
+.table_p table{
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+
+    position: absolute;
+    text-align: center;
+}
+.table_p table thead th{
+    color: #61d2f7;
+    font-size: 14px;
+    font-weight: 600;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.table_p table tbody{
+    color: #ffffff;
+   font-size: 13px;
+}
+.table_p table tbody tr:nth-child(2n+1){
+    background-color: #072951;
+    box-shadow: -10px 0px 15px #034c6a inset,
+    10px 0px 15px #034c6a inset;
+}
+
+.car_left{
+    width: 18%;
+    height: 100%;
+    background-color:  #081832;
+}
+.car_center{
+
+    height: 100%;
+    background-color:  #081832;
+    width: 50.5%;
+    margin-left: 0.5%;
+}
+.car_center video{
+    width: 49.5%;
+    height: 49%;
+
+
+    box-sizing: border-box;
+    box-shadow: -10px 0px 15px #034c6a inset,
+    10px 0px 15px #034c6a inset;
+    float: left;
+}
+.magin_top{
+    margin-top: 1%;
+}
+.magin_left{
+    margin-left: 1%;
+}
+.car_right{
+    width: 31%;
+    height: 100%;
+}
+.text_center{
+    text-align: center;
+}
+.carNo_input{
+    width: 75%;
+    height: 25px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-indent: 2em;
+    margin-left: 5%;
+
+    border:1px solid #072951;
+border-radius: 3px;
+}
+.find_but{
+    height: 25px;
+    background-image: url("../img/find.png");
+    width: 25px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    position: relative;
+    top:8px;
+    border:none;
+    background-color: transparent;
+}
+.find_but1{
+    height: 25px;
+    background-image: url("../img/find.png");
+    width: 25px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    position: relative;
+    top:8px;
+    border:1px solid #4b8df8;
+    background-color: transparent;
+}
+.set_list{
+    padding: 10px 5%;
+    color: #eee;
+    font-size: 14px;
+}
+.list_i{
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+
+    background-image: url("../img/nav_1.png");
+    top:3px;
+    position: relative;
+}
+.left_up{
+
+    height: 58%;
+
+}
+.left_table{
+
+    height: 98%;
+
+    border-radius: 5px;
+    width:18%!important;
+    background-color:  #081832;
+
+
+}
+.right_table{
+    height: 98%;
+
+    border-radius: 5px;
+    width:81.5%!important;
+    background-color:  #081832;
+    margin-left: 0.5%;
+}
+.center_table{
+    height: 100%;
+    border-radius: 5px;
+    width:100%;
+    background-color:  #081832;
+   margin: 0 auto;
+}
+.bow_shadow{
+    box-shadow: -8px 0px 10px #034c6a inset,
+    8px 0px 10px #034c6a inset;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.ztree li a{
+    color: #FFFFff !important;
+}
+.left_down{
+    height: 40%;
+    margin-top: 2%;
+}
+.tab_a{
+    width: 45%;
+    height: 30px;
+    line-height: 30px;
+    color: #FFFFff;
+    background-color: #667fa7;
+    display: inline-block;
+    margin-right: 1%;
+    margin-top: 5px;
+    font-size: 14px;
+}
+.tab_aActive{
+    background-color:#034c6a !important;
+    font-weight: 600;
+}
+.car_content{
+    margin-left: 5%;
+
+    font-size: 13px;
+    color: #eeeeee;
+}
+.car_content p{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.table2_find{
+    background-color: #072951;
+    box-shadow: -10px 0px 15px #034c6a inset, 10px 0px 15px #034c6a inset;
+    width: 100%;
+    padding: 5px 0;
+    color: #FFFFff;
+}
+
+
+.table2_find input[type=text]{
+    background-color: transparent;
+    width: 16%;
+    height: 24px;
+    border-radius: 3px;
+    text-indent: 1em;
+    border:1px solid #7EC4CC;
+
+}
+
+
+.table_find{
+    width: 100%;
+    padding: 8px 0;
+    border-bottom: 2px solid #a5c5f83b;
+    font-size: 13px;
+}
+.more_find{
+
+    cursor: pointer;
+    position: relative;
+    top:5px;
+}
+.table_find .glyphicon{
+    margin-right: 5px;
+}
+.table_find button{
+    padding: 4px 10px;
+}
+.table_find p{
+    margin-top: 8px;
+}
+.table_find label{
+
+    color: #eeeeee;
+
+    width: 8%;
+    display: inline-block;
+    text-align: right;
+
+}
+.table_find input[type=text],.table_find input[type=date]{
+    width: 16%;
+    height: 24px;
+    border-radius: 3px;
+    text-indent: 1em;
+    border:1px solid#4b8df8;
+    background-color: #cccccc4f;
+}
+.table_find select{
+    width: 12%;
+    height: 24px;
+    border-radius: 3px;
+    text-indent: 1em;
+    border:1px solid #4b8df8;
+    background-color: #cccccc4f;
+}
+.table_find input[type=checkbox]{
+    width: 14px;
+    height: 14px;
+    position: relative;
+    top:3px;
+    margin-right: 5px;
+}
+.table_find span{
+    color: #b2cbf3;
+
+    margin-right: 2%;
+}
+.find_button{
+    width: 5%;
+    height: 26px;
+    border: none;
+    border-radius: 2px;
+    background-color: #4b8df8;
+    color: #FFFFff;
+    font-size: 14px;
+
+}
+.table2_style{
+    color: #FFFFff;
+    border: none !important;
+    font-size: 13px;
+}
+.table2_style a{
+    margin-right: 10px;
+}
+.table2_style tbody tr:nth-child(2n+1){
+    background-color: #072951;
+   border-left: 4px solid #4b8df8;;
+}
+.table2_style thead tr{
+    color: #FFFFff;
+   background-color:#4b8df8;
+}
+.table2_style td{
+    border: none !important;
+}
+.table2_style thead th{
+    border-bottom: none !important;
+}
+.table2_style tbody tr:nth-child(2n):hover{
+    /*color: #072951;*/
+    background-color: rgba(75, 141, 248, 0.65);
+
+}
+.table_style{
+    color: #FFFFff;
+    box-shadow: -8px 0px 10px #034c6a inset,
+    8px 0px 10px #034c6a inset;
+    border: none !important;
+    font-size: 13px;
+}
+.table_style a{
+    margin-right: 10px;
+}
+.table_style td{
+    border: none !important;
+}
+.table_style tbody tr:nth-child(2n+1){
+    background-color: #072951;
+    box-shadow: -10px 0px 15px #034c6a inset,
+    10px 0px 15px #034c6a inset;
+}
+.table_style thead tr{
+    color: #4b8df8;
+}
+.table_style thead th{
+    border-bottom: none !important;
+}
+.table_style tbody tr:nth-child(2n):hover{
+    /*color: #072951;*/
+    background-color: rgba(75, 141, 248, 0.12);
+}
+.table_div{
+    margin-top: 10px;
+    color: #FFFFff;
+}
+.table_but{
+    text-align: right;
+    font-size: 13px;
+    padding-bottom: 5px;
+    padding-top: 10px;
+
+}
+.table_but a{
+    margin-right: 15px;
+    color: #FFFFff;
+}
+.table_but a i{
+    margin-right: 5px;
+}
+.table_del{
+    color: orangered;
+}
+.table_edit{
+    color: #0D8BBD;
+}
+.span_left{
+    padding: 5px;
+}
+/*地图界面样式*/
+.map_con{
+    width: 100%;
+    padding: 0;
+    background-color: #081832cc;
+}
+.map_left{
+    width: 79%;
+    height: 100%;
+
+
+}
+.map_right{
+    width: 20.5%;
+    height: 100%;
+    background-color: #081832;
+}
+.map_box{
+    width: 100%;
+    height: 100%;
+
+}
+.map_top{
+    position: absolute;
+    top:80px;
+    left: 0;
+    height: 35px;
+    width: 79%;
+    border-bottom: 1px solid #4b8df8;
+    background-color: rgba(255, 255, 255, 0.84);
+    z-index: 99;
+}
+.map_top>ul{
+    list-style: none;
+    font-size: 14px;
+    float: right;
+}
+.map_top>ul>li{
+    display: inline-block;
+    line-height: 35px;
+    padding: 0 10px;
+}
+.map_top>ul>li i{
+    margin-right: 5px;
+}
+.map_top>ul>li a{
+    color: #2E2D3C;
+}
+.map_top>ul .active,.map_top>ul>li .active{
+    color: #0D8BBD;
+}
+.map_select{
+    position: fixed;
+    top:160px;
+    right: 21.5%;
+    box-shadow: -10px 0px 15px #034c6a inset, /*å·¦è¾¹é˜´å½±*/
+    0px -10px 15px #034c6a inset, /*ä¸Šè¾¹é˜´å½±*/
+    10px 0px 15px #034c6a inset, /*å³è¾¹é˜´å½±*/
+    0px 10px 15px #034c6a inset;
+    border: 1px solid #034c6a;
+    width: 120px;
+    height: 180px;
+    border-radius: 5px;
+    background-color: #081832e3;
+}
+.map_select p{
+    padding: 8px 15px;
+    color: #FFFFff;
+    font-size: 14px;
+}
+.map_select p input[type=checkbox]{
+    width: 15px;
+    height: 15px;
+    position: relative;
+    top:3px;
+    margin-right: 10px;
+}
+.map_right_top{
+    width: 100%;
+    height: 35px;
+
+    background-color: #034c6a;
+}
+.map_right_top>ul>li{
+    list-style: none;
+    display: inline-block;
+    line-height: 35px;
+    font-size: 14px;
+    text-align: center;
+    width: 32%;
+    color: #FFFFff;
+    cursor: pointer;
+}
+.map_right_top>ul>li.li_active{
+    background-color: #0D8BBD;
+}
+.map_chart{
+    width: 100%;
+    height: 250px;
+
+
+
+    box-sizing: border-box;
+    position: relative;
+    margin-top: 25px;
+}
+.map_con{
+    width: 100%;
+}
+.map_con_div{
+    display: none;
+    text-align: center;
+}
+.map_work{
+    margin-top: 5px;
+    border-top:1px solid #0D8BBD;;
+}
+.map_work>ul>li{
+    list-style: none;
+    display: inline-block;
+    width: 32%;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    padding: 10px 0;
+
+}
+.map_work>ul>li:hover{
+    box-shadow: -10px 0px 15px #034c6a inset, /*å·¦è¾¹é˜´å½±*/
+    0px -10px 15px #034c6a inset, /*ä¸Šè¾¹é˜´å½±*/
+    10px 0px 15px #034c6a inset, /*å³è¾¹é˜´å½±*/
+    0px 10px 15px #034c6a inset;
+}
+.map_work>ul>li .img_div{
+    width: 28px;
+    height: 24px;
+    margin: 0 auto;
+
+}
+.img_div01{
+
+    background: url(../img/map_photo.png) no-repeat;
+    background-position: -126px -73px;
+}
+.img_div02{
+    background: url(../img/map_photo.png) no-repeat;
+    background-position:  -98px -122px;
+
+}
+.img_div_text{
+    color: #FFFFff;
+    margin-top: 8px;
+    font-size: 13px;
+}
+.back_i{
+    position: relative;
+    top:2px;
+    margin-right: 5px;
+}
+.map_resList{
+    width: 96%;
+    margin: 0 auto;
+    font-size: 13px;
+    display: none;
+}
+.map_resList>ul>li{
+    list-style: none;
+    margin-top: 8px;
+}
+.map_resList>ul>li p{
+    padding: 5px 0;
+    color: #eeeeee;
+}
+.map_resList>ul>li a{
+    margin-right: 6px;
+}
+.map_resList>ul>li a img{
+    width: 16px;
+
+}
+.map_resList>ul>li:nth-child(2n+1){
+    background-color: #0d8bbd36;
+}
+/*统计分析界面样式*/
+.static_top{
+    width: 140px;
+    height: 36px;
+    line-height: 36px;
+    background-color: #04425f;
+    margin-bottom: 25px;
+    margin-left: 1%;
+    padding-left: 20px;
+    border-radius: 1px;
+    box-shadow: 0px 3px 3px #61d2f7;
+
+}
+.static_top i{
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    position: relative;
+    background-image: url("../img/nav_7.png");
+    background-repeat: no-repeat;
+    margin-right: 6px;
+    top:1px;
+}
+.static_top span{
+    color: #25f3e6;
+}
+.stiatic_top_con{
+    background-color: #034c6a;
+    width: 96%;
+    margin-left: 1%;
+    margin-bottom: 25px;
+    padding: 10px 1%;
+    border-radius: 5px;
+}
+.stiatic_top_con table{
+    width: 100%;
+    border-collapse: collapse;
+}
+.stiatic_top_con table td{
+    color: #FFFFff;
+    padding: 5px;
+    font-size: 13px;
+    border:1px solid #485f849c;
+}
+.stiatic_top_con table .labe_td{
+    color: #61d2f7;
+    font-size: 14px;
+    width: 120px;
+    text-align: right;
+}
+.layui-layer-title{
+    /*box-shadow: -8px 0px 10px #034c6a inset,*/
+    /*8px 0px 10px #034c6a inset;*/
+    background-color: #081832d4 !important;
+    color: #FFFFff !important;
+    border-bottom: 3px solid #4b8df8 !important;
+    box-sizing: border-box;
+}
+
+
+.hide{
+  display: none !important;
+}
+.xc_layer{position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #666666; opacity: 0.5; z-index: 1000;}
+.popBox{position: fixed; left: 45%; top: 10%; background-color: #081832; z-index: 1001; width: 90%; max-height: 84%; margin-left: -40%; border-radius: 5px; font-weight: bold; color: #ffffff;height: 100%;}
+.popBox .ttBox{height: 30px; line-height: 30px; padding: 14px 30px; border-bottom: solid 1px #eef0f1;text-align: center;-webkit-box-sizing: content-box;  -moz-box-sizing: content-box;box-sizing: content-box;}
+.popBox .ttBox .tt{font-size: 20px; display: inline-block;  height: 30px;}
+.popBox .txtBox{height: calc(100% - 80px);overflow: auto;padding: 10px 0;}
+
+    </style>
+    <!---wode-->
+    <!-- <link rel="stylesheet" href="./styles/common.css"> -->
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/themes/macarons.js"></script>
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/themes/wonderland.js"></script>
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts-wordcloud.min.js"></script>
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/jquery.min.js"></script>
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/ResizeSensor.js"></script>
+
+        <link rel="stylesheet"  href="https://assets.pyecharts.org/assets/jquery-ui.css">
+</head>
+<body>
+<!--顶部-->
+<header class="header left">
+  <div class="left nav">
+      <ul>
+          <li><a href="https://movie.douban.com">我的豆瓣</a> </li>
+          <li class="nav_active"><a href="https://pyecharts.org/#/">数据分析</a> </li>
+          <li><a href="https://hbimg.huabanimg.com/63ffe71568b0c2e9ca188eb90d8850faa8654e0431a87-2fWOMR_fw658/format/webp">词云图展示</a> </li>
+          <li><a href="https://movie.douban.com/top250">豆瓣电影列表</a> </li>
+          </ul>
+  </div>
+    <div class="header_center left" style="position:relative">
+        
+        <h2><strong>豆瓣电影TOP250数据展示</strong></h2>
+
+    </div>
+    <div class="right nav text_right">
+        <ul>
+
+        </ul>
+    </div>
+
+</header>
+<!--内容部分-->
+<div class="con left">
+  <!--数据总概-->
+  <div class="con_div">
+      <div class="con_div_text left">
+          <div class="con_div_text01 left">
+              <img src="https://hbimg.huabanimg.com/8977c30c2c86e65791a422442e6379b1537aabdf1232-BPMQZV" class="left text01_img"/>
+              <div class="left text01_div">
+                  <p>最佳外国电影</p>
+                  <p>肖申克的救赎</p>
+              </div>
+          </div>
+          <div class="con_div_text01 right">
+              <img src="https://hbimg.huabanimg.com/8d3b73f474978b623808c2873fa7856e6180f5ec1a2c-tvfwza" class="left text01_img"/>
+              <div class="left text01_div">
+                <p>最佳中国电影</p>
+                <p>霸王别姬</p>
+              </div>
+          </div>
+      </div>
+      <div class="con_div_text left">
+          <div class="con_div_text01 left">
+              <img src="https://hbimg.huabanimg.com/7889014406872738f92f15667e1aad8bf56418b02f9d-gy4C8C" class="left text01_img"/>
+              <div class="left text01_div">
+                  <p>最高评价人数</p>
+                  <p class="sky">2186881人</p>
+              </div>
+          </div>
+          <div class="con_div_text01 right">
+              <img src="https://hbimg.huabanimg.com/3384d50359e04b00ff912b77736fce32a8fea4b91aec-MtZUtA" class="left text01_img"/>
+              <div class="left text01_div">
+                  <p>TOP评分</p>
+                  <p class="sky">9.7分</p>
+              </div>
+          </div>
+      </div>
+      <div class="con_div_text left">
+
+          <div class="con_div_text01 left">
+              <img src="https://hbimg.huabanimg.com/217edae6e649351caed122388bf63400e6c886a81beb-WctBqj" class="left text01_img"/>
+              <div class="left text01_div">
+                  <p>中国电影占比</p>
+                  <p class="org">16%</p>
+              </div>
+          </div>
+          <div class="con_div_text01 right">
+              <img src="https://hbimg.huabanimg.com/21b4f2b63f2a47b7aac221eefd9b0b0be92bf59216e3-b3RmbD" class="left text01_img"/>
+              <div class="left text01_div">
+                  <p>外国电影占比</p>
+                  <p class="org">84%</p>
+              </div>
+          </div>
+      </div>
+  </div>
+    <!--统计分析图-->
+    <div class="div_any">
+        <div class="left div_any01">
+            <div class="div_any_child">
+                <div class="div_any_title"><img src="https://hbimg.huabanimg.com/36c78d1362ceacba1e834277f0bfc18493f97a20161c-uEf9iq">豆瓣电影上映年份分布</div>
+                <p id="c0f93045e9e64bc1a8a083f3227fe61a" class="chart-container" style="width:690px; height:380px;"></p>
+                <script>
+                    var chart_c0f93045e9e64bc1a8a083f3227fe61a = echarts.init(
+                        document.getElementById('c0f93045e9e64bc1a8a083f3227fe61a'), 'macarons', {renderer: 'canvas'});
+                    var option_c0f93045e9e64bc1a8a083f3227fe61a = {
+                "animation": true,
+                "animationThreshold": 2000,
+                "animationDuration": 1000,
+                "animationEasing": "cubicOut",
+                "animationDelay": 0,
+                "animationDurationUpdate": 300,
+                "animationEasingUpdate": "cubicOut",
+                "animationDelayUpdate": 0,
+                "series": [
+                    {
+                        "type": "bar",
+                        "name": "\u8c46\u74e3\u7535\u5f71TOP250\u5e74\u4efd\u7edf\u8ba1",
+                        "legendHoverLink": true,
+                        "data": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            2,
+                            1,
+                            2,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            2,
+                            2,
+                            3,
+                            4,
+                            2,
+                            3,
+                            4,
+                            2,
+                            7,
+                            12,
+                            7,
+                            2,
+                            8,
+                            5,
+                            6,
+                            5,
+                            9,
+                            8,
+                            8,
+                            13,
+                            4,
+                            9,
+                            4,
+                            9,
+                            9,
+                            13,
+                            9,
+                            5,
+                            11,
+                            9,
+                            10,
+                            9,
+                            7,
+                            7,
+                            1
+                        ],
+                        "showBackground": false,
+                        "barMinHeight": 0,
+                        "barCategoryGap": "20%",
+                        "barGap": "30%",
+                        "large": false,
+                        "largeThreshold": 400,
+                        "seriesLayoutBy": "column",
+                        "datasetIndex": 0,
+                        "clip": true,
+                        "zlevel": 0,
+                        "z": 2,
+                        "label": {
+                            "show": true,
+                            "position": "top",
+                            "margin": 8
+                        }
+                    }
+                ],
+                "legend": [
+                    {
+                        "data": [
+                            "\u8c46\u74e3\u7535\u5f71TOP250\u5e74\u4efd\u7edf\u8ba1"
+                        ],
+                        "selected": {
+                            "\u8c46\u74e3\u7535\u5f71TOP250\u5e74\u4efd\u7edf\u8ba1": true
+                        },
+                        
+                        "show": true,
+                        "left": "center",
+                        "top": "5%",
+                        "orient": "horizontal",
+                        "padding": 5,
+                        "itemGap": 10,
+                        "itemWidth": 25,
+                        "itemHeight": 14,
+                        "textStyle": {
+                            "fontFamily": "Times New Roman",
+                            "fontSize": 16,
+                            "color": "white",
+                        },
+                        
+                    }
+                ],
+                "tooltip": {
+                    "show": true,
+                    "trigger": "item",
+                    "triggerOn": "mousemove|click",
+                    "axisPointer": {
+                        "type": "line"
+                    },
+                    "showContent": true,
+                    "alwaysShowContent": false,
+                    "showDelay": 0,
+                    "hideDelay": 100,
+                    "textStyle": {
+                        "fontSize": 14
+                    },
+                    "borderWidth": 0,
+                    "padding": 5
+                },
+                "xAxis": [
+                    {
+                        "show": true,
+                        "scale": false,
+                        "nameLocation": "end",
+                        "nameGap": 15,
+                        "gridIndex": 0,
+                        "inverse": false,
+                        "offset": 0,
+                        "splitNumber": 5,
+                        "minInterval": 0,
+                        "splitLine": {
+                            "show": false,
+                            "lineStyle": {
+                                "show": true,
+                                "width": 1,
+                                "opacity": 1,
+                                "curveness": 0,
+                                "type": "solid"
+                            }
+                        },
+                        "data": [
+                            "1931",
+                            "1936",
+                            "1939",
+                            "1940",
+                            "1950",
+                            "1952",
+                            "1953",
+                            "1954",
+                            "1957",
+                            "1960",
+                            "1961",
+                            "1965",
+                            "1966",
+                            "1968",
+                            "1971",
+                            "1972",
+                            "1974",
+                            "1975",
+                            "1979",
+                            "1983",
+                            "1984",
+                            "1986",
+                            "1987",
+                            "1988",
+                            "1989",
+                            "1990",
+                            "1991",
+                            "1992",
+                            "1993",
+                            "1994",
+                            "1995",
+                            "1996",
+                            "1997",
+                            "1998",
+                            "1999",
+                            "2000",
+                            "2001",
+                            "2002",
+                            "2003",
+                            "2004",
+                            "2005",
+                            "2006",
+                            "2007",
+                            "2008",
+                            "2009",
+                            "2010",
+                            "2011",
+                            "2012",
+                            "2013",
+                            "2014",
+                            "2015",
+                            "2016",
+                            "2017",
+                            "2018",
+                            "2019"
+                        ]
+                    }
+                ],
+                "yAxis": [
+                    {
+                        "show": true,
+                        "scale": false,
+                        "nameLocation": "end",
+                        "nameGap": 15,
+                        "gridIndex": 0,
+                        "axisLabel": {
+                            "show": true,
+                            "position": "top",
+                            "margin": 8
+                        },
+                        "inverse": false,
+                        "offset": 0,
+                        "splitNumber": 5,
+                        "minInterval": 0,
+                        "splitLine": {
+                            "show": false,
+                            "lineStyle": {
+                                "show": true,
+                                "width": 1,
+                                "opacity": 1,
+                                "curveness": 0,
+                                "type": "solid"
+                            }
+                        }
+                    }
+                ],
+                "title": [
+                    {
+                        "padding": 5,
+                        "itemGap": 10
+                    }
+                ],
+                "dataZoom": {
+                    "show": true,
+                    "type": "slider",
+                    "realtime": true,
+                    "start": 20,
+                    "end": 80,
+                    "orient": "horizontal",
+                    "zoomLock": false,
+                    "filterMode": "filter"
+                }
+            };
+                    chart_c0f93045e9e64bc1a8a083f3227fe61a.setOption(option_c0f93045e9e64bc1a8a083f3227fe61a);
+                </script>
+            </div> 
+            <div style="color: white;width: 690px;height: 20px;text-align: center;margin: 20px 0;background-color: #081832;font-size: 14px;">电影的上映年份，多分布于80年代以后。其中有好几年是在10部及以上的</div> 
+            <div class="div_any_child">
+                <div class="div_any_title"><img src="https://hbimg.huabanimg.com/87a4d432605be6784764cfea72436006a4703ab61517-UaLX4V">国家-地区电影数TOP10</div>
+                <p id="06b89030ba954ef6b0fd50daef815d3b" class="chart-container" style="width:690px; height:380px;"></p>
+                <script>
+                    var chart_06b89030ba954ef6b0fd50daef815d3b = echarts.init(
+                        document.getElementById('06b89030ba954ef6b0fd50daef815d3b'), 'wonderland', {renderer: 'canvas'});
+                    var option_06b89030ba954ef6b0fd50daef815d3b = {
+                "animation": true,
+                "animationThreshold": 2000,
+                "animationDuration": 1000,
+                "animationEasing": "cubicOut",
+                "animationDelay": 0,
+                "animationDurationUpdate": 300,
+                "animationEasingUpdate": "cubicOut",
+                "animationDelayUpdate": 0,
+                "series": [
+                    {
+                        "type": "bar",
+                        "name": "count",
+                        "legendHoverLink": true,
+                        "data": [
+                            5,
+                            6,
+                            6,
+                            8,
+                            11,
+                            15,
+                            17,
+                            19,
+                            32,
+                            112
+                        ],
+                        "showBackground": false,
+                        "barMinHeight": 0,
+                        "barCategoryGap": "20%",
+                        "barGap": "30%",
+                        "large": false,
+                        "largeThreshold": 400,
+                        "seriesLayoutBy": "column",
+                        "datasetIndex": 0,
+                        "clip": true,
+                        "zlevel": 0,
+                        "z": 2,
+                        "label": {
+                            "show": true,
+                            "position": "right",
+                            "margin": 8
+                        },
+                        "rippleEffect": {
+                            "show": true,
+                            "brushType": "stroke",
+                            "scale": 2.5,
+                            "period": 4
+                        }
+                    }
+                ],
+                "legend": [
+                    {
+                        "data": [
+                            "count"
+                        ],
+                        "selected": {
+                            "count": true
+                        },
+                        "show": true,
+                        "left": "center",
+                        "top": "middle",
+                        "orient": "vertical",
+                        "padding": 5,
+                        "itemGap": 10,
+                        "itemWidth": 25,
+                        "itemHeight": 14,
+                        "color": "white",
+                    }
+                ],
+                "tooltip": {
+                    "show": true,
+                    "trigger": "item",
+                    "triggerOn": "mousemove|click",
+                    "axisPointer": {
+                        "type": "line"
+                    },
+                    "showContent": true,
+                    "alwaysShowContent": false,
+                    "showDelay": 0,
+                    "hideDelay": 100,
+                    "textStyle": {
+                        "fontSize": 14
+                    },
+                    "borderWidth": 0,
+                    "padding": 5
+                },
+                "xAxis": [
+                    {
+                        "show": true,
+                        "scale": false,
+                        "nameLocation": "end",
+                        "nameGap": 15,
+                        "gridIndex": 0,
+                        "axisLabel": {
+                            "show": true,
+                            "position": "top",
+                            "margin": 8,
+                            "fontSize": 12,
+                            "fontFamily": "Times New Roman"
+                        },
+                        "inverse": false,
+                        "offset": 0,
+                        "splitNumber": 5,
+                        "minInterval": 0,
+                        "splitLine": {
+                            "show": false,
+                            "lineStyle": {
+                                "show": true,
+                                "width": 1,
+                                "opacity": 1,
+                                "curveness": 0,
+                                "type": "solid"
+                            }
+                        }
+                    }
+                ],
+                "yAxis": [
+                    {
+                        "show": true,
+                        "scale": false,
+                        "nameLocation": "end",
+                        "nameGap": 15,
+                        "gridIndex": 0,
+                        "inverse": false,
+                        "offset": 0,
+                        "splitNumber": 5,
+                        "minInterval": 0,
+                        "axisLabel": {
+                            "show": true,
+                            "position": "top",
+                            "margin": 8,
+                            "fontSize": 12,
+                            "fontFamily": "Times New Roman",
+                            "color":"skyblue",
+                        },
+                        "splitLine": {
+                            "show": false,
+                            "lineStyle": {
+                                "show": true,
+                                "width": 1,
+                                "opacity": 1,
+                                "curveness": 0,
+                                "type": "solid"
+                            }
+                        },
+                        "data": [
+                            "\u5fb7\u56fd",
+                            "\u4e2d\u56fd\u53f0\u6e7e",
+                            "\u610f\u5927\u5229",
+                            "\u6cd5\u56fd",
+                            "\u97e9\u56fd",
+                            "\u4e2d\u56fd\u5927\u9646",
+                            "\u82f1\u56fd",
+                            "\u4e2d\u56fd\u9999\u6e2f",
+                            "\u65e5\u672c",
+                            "\u7f8e\u56fd"
+                        ]
+                    }
+                ],
+                "title": [
+                    {
+                        "left": "center",
+                        "padding": 5,
+                        "itemGap": 10
+                    }
+                ]
+            };
+                    chart_06b89030ba954ef6b0fd50daef815d3b.setOption(option_06b89030ba954ef6b0fd50daef815d3b);
+                </script>    
+            </div>
+            <div style="color: white;width: 690px;height: 20px;text-align: center;margin: 20px 0;background-color: #081832;font-size: 14px;">美国遥遥领先，中国位居其中,90，00年代的香港影业确实很强</div> 
+        </div>
+        <div class="left div_any01">
+            <div class="div_any_child">
+                <div class="div_any_title"><img src="https://hbimg.huabanimg.com/8eb8460093f40dc1153505c053a6fc44538e63121ed1-tssZli">豆瓣电影上映评分Top10</div>
+                <p id="5a6e9fb161544dfa92a4e8009867ad47" class="chart-container" style="width:690px; height:380px;"></p>
+                <script>
+                    var chart_5a6e9fb161544dfa92a4e8009867ad47 = echarts.init(
+                        document.getElementById('5a6e9fb161544dfa92a4e8009867ad47'), 'macarons', {renderer: 'canvas'});
+                    var option_5a6e9fb161544dfa92a4e8009867ad47 = {
+                "animation": true,
+                "animationThreshold": 2000,
+                "animationDuration": 1000,
+                "animationEasing": "cubicOut",
+                "animationDelay": 0,
+                "animationDurationUpdate": 300,
+                "animationEasingUpdate": "cubicOut",
+                "animationDelayUpdate": 0,
+                "series": [
+                    {
+                        "type": "bar",
+                        "name": "\u8c46\u74e3\u7535\u5f71TOP250\u8bc4\u5206\u7edf\u8ba1",
+                        "legendHoverLink": true,
+                        "data": [
+                            1,
+                            3,
+                            12,
+                            26,
+                            43,
+                            43,
+                            32,
+                            21,
+                            21,
+                            18,
+                            18,
+                            5,
+                            4,
+                            2,
+                            1
+                        ],
+                        "showBackground": false,
+                        "barMinHeight": 0,
+                        "barCategoryGap": "20%",
+                        "barGap": "30%",
+                        "large": false,
+                        "largeThreshold": 400,
+                        "seriesLayoutBy": "column",
+                        "datasetIndex": 0,
+                        "clip": true,
+                        "zlevel": 0,
+                        "z": 2,
+                        "label": {
+                            "show": true,
+                            "position": "top",
+                            "margin": 8
+                        }
+                    }
+                ],
+                "legend": [
+                    {
+                        "data": [
+                            "\u8c46\u74e3\u7535\u5f71TOP250\u8bc4\u5206\u7edf\u8ba1"
+                        ],
+                        "selected": {
+                            "\u8c46\u74e3\u7535\u5f71TOP250\u8bc4\u5206\u7edf\u8ba1": true
+                        },
+                        "show": true,
+                        "left": "center",
+                        "top": "5%",
+                        "orient": "vertical",
+                        "padding": 5,
+                        "itemGap": 10,
+                        "itemWidth": 25,
+                        "itemHeight": 14,
+                        "textStyle": {
+                            "fontFamily": "Times New Roman",
+                            "fontSize": 16,
+                            "color": "white",
+                        }
+                    }
+                ],
+                "tooltip": {
+                    "show": true,
+                    "trigger": "item",
+                    "triggerOn": "mousemove|click",
+                    "axisPointer": {
+                        "type": "line"
+                    },
+                    "showContent": true,
+                    "alwaysShowContent": false,
+                    "showDelay": 0,
+                    "hideDelay": 100,
+                    "textStyle": {
+                        "fontSize": 14
+                    },
+                    "borderWidth": 0,
+                    "padding": 5
+                },
+                "xAxis": [
+                    {
+                        "show": true,
+                        "scale": false,
+                        "nameLocation": "end",
+                        "nameGap": 15,
+                        "gridIndex": 0,
+                        "inverse": false,
+                        "offset": 0,
+                        "splitNumber": 5,
+                        "minInterval": 0,
+                        "splitLine": {
+                            "show": false,
+                            "lineStyle": {
+                                "show": true,
+                                "width": 1,
+                                "opacity": 1,
+                                "curveness": 0,
+                                "type": "solid"
+                            }
+                        },
+                        "data": [
+                            8.3,
+                            8.4,
+                            8.5,
+                            8.6,
+                            8.7,
+                            8.8,
+                            8.9,
+                            9.0,
+                            9.1,
+                            9.2,
+                            9.3,
+                            9.4,
+                            9.5,
+                            9.6,
+                            9.7
+                        ]
+                    }
+                ],
+                "yAxis": [
+                    {
+                        "show": true,
+                        "scale": false,
+                        "nameLocation": "end",
+                        "nameGap": 15,
+                        "gridIndex": 0,
+                        "axisLabel": {
+                            "show": true,
+                            "position": "top",
+                            "margin": 8
+                        },
+                        "inverse": false,
+                        "offset": 0,
+                        "splitNumber": 5,
+                        "minInterval": 0,
+                        "splitLine": {
+                            "show": false,
+                            "lineStyle": {
+                                "show": true,
+                                "width": 1,
+                                "opacity": 1,
+                                "curveness": 0,
+                                "type": "solid"
+                            }
+                        }
+                    }
+                ],
+                "title": [
+                    {
+                        "padding": 5,
+                        "itemGap": 10
+                    }
+                ],
+                "dataZoom": {
+                    "show": true,
+                    "type": "slider",
+                    "realtime": true,
+                    "start": 20,
+                    "end": 80,
+                    "orient": "horizontal",
+                    "zoomLock": false,
+                    "filterMode": "filter"
+                }
+            };
+                    chart_5a6e9fb161544dfa92a4e8009867ad47.setOption(option_5a6e9fb161544dfa92a4e8009867ad47);
+                </script>
+            </div>
+            <div style="color: white;width: 690px;height: 20px;text-align: center;margin: 20px 0;background-color: #081832;font-size: 14px;">大多分布于「8.5」到「9.2」之间。最低「8.3」，最高「9.6」</div>
+            <div class="div_any_child">
+                <div class="div_any_title"><img src="https://hbimg.huabanimg.com/dfa76f9f9170de707309184baa5bc65792f7bdc92365-GyPYyN">豆瓣电影上映评价人数分布</div>
+                <p id="24a5e53327d447a2bbec9d0ae2546b0d" class="chart-container" style="width:690px; height:380px;"></p>
+                <script>
+                    var chart_24a5e53327d447a2bbec9d0ae2546b0d = echarts.init(
+                        document.getElementById('24a5e53327d447a2bbec9d0ae2546b0d'), 'wonderland', {renderer: 'canvas'});
+                    var option_24a5e53327d447a2bbec9d0ae2546b0d = {
+                "animation": true,
+                "animationThreshold": 2000,
+                "animationDuration": 1000,
+                "animationEasing": "cubicOut",
+                "animationDelay": 0,
+                "animationDurationUpdate": 300,
+                "animationEasingUpdate": "cubicOut",
+                "animationDelayUpdate": 0,
+                "series": [
+                    {
+                        "type": "bar",
+                        "name": "2019\u5e74\u8c46\u74e3\u7535\u5f71TOP10\u8bc4\u4ef7\u4eba\u6570\u7edf\u8ba1",
+                        "legendHoverLink": true,
+                        "data": [
+                            1405738,
+                            1460398,
+                            1601788,
+                            1604530,
+                            1604815,
+                            1622453,
+                            1650384,
+                            1718980,
+                            1834962,
+                            2186881
+                        ],
+                        "showBackground": false,
+                        "barMinHeight": 0,
+                        "barCategoryGap": "20%",
+                        "barGap": "30%",
+                        "large": false,
+                        "largeThreshold": 400,
+                        "seriesLayoutBy": "column",
+                        "datasetIndex": 0,
+                        "clip": true,
+                        "zlevel": 0,
+                        "z": 2,
+                        "label": {
+                            "show": true,
+                            "position": "right",
+                            "margin": 8
+                        },
+                        "rippleEffect": {
+                            "show": true,
+                            "brushType": "stroke",
+                            "scale": 2.5,
+                            "period": 4
+                        }
+                    }
+                ],
+                "legend": [
+                    {
+                        "data": [
+                            "2019\u5e74\u8c46\u74e3\u7535\u5f71TOP10\u8bc4\u4ef7\u4eba\u6570\u7edf\u8ba1"
+                        ],
+                        "selected": {
+                            "2019\u5e74\u8c46\u74e3\u7535\u5f71TOP10\u8bc4\u4ef7\u4eba\u6570\u7edf\u8ba1": true
+                        },
+                        "show": true,
+                        "left": "center",
+                        "top": "bottom",
+                        "orient": "vertical",
+                        "padding": 5,
+                        "itemGap": 10,
+                        "itemWidth": 25,
+                        "itemHeight": 14,
+                        "textStyle": {
+                            "fontFamily": "Times New Roman",
+                            "fontSize": 16,
+                            "color": "white",
+                        }
+                    }
+                ],
+                "tooltip": {
+                    "show": true,
+                    "trigger": "item",
+                    "triggerOn": "mousemove|click",
+                    "axisPointer": {
+                        "type": "line"
+                    },
+                    "showContent": true,
+                    "alwaysShowContent": false,
+                    "showDelay": 0,
+                    "hideDelay": 100,
+                    "textStyle": {
+                        "fontSize": 14
+                    },
+                    "borderWidth": 0,
+                    "padding": 5
+                },
+                "xAxis": [
+                    {
+                        "show": true,
+                        "scale": false,
+                        "nameLocation": "end",
+                        "nameGap": 15,
+                        "gridIndex": 0,
+                        "axisLabel": {
+                            "show": true,
+                            "position": "top",
+                            "margin": 8,
+                            "fontSize": 12,
+                            "fontFamily": "Times New Roman"
+                        },
+                        "inverse": false,
+                        "offset": 0,
+                        "splitNumber": 5,
+                        "minInterval": 0,
+                        "splitLine": {
+                            "show": false,
+                            "lineStyle": {
+                                "show": true,
+                                "width": 1,
+                                "opacity": 1,
+                                "curveness": 0,
+                                "type": "solid"
+                            }
+                        }
+                    }
+                ],
+                "yAxis": [
+                    {
+                        "show": true,
+                        "scale": false,
+                        "nameLocation": "end",
+                        "nameGap": 15,
+                        "gridIndex": 0,
+                        "axisLabel": {
+                            "show": true,
+                            "position": "top",
+                            "margin": 8,
+                            "fontSize": 12,
+                            "fontFamily": "Times New Roman",
+                            "color":"skyblue",
+                        },
+                        "inverse": false,
+                        "offset": 0,
+                        "splitNumber": 5,
+                        "minInterval": 0,
+                        "splitLine": {
+                            "show": false,
+                            "lineStyle": {
+                                "show": true,
+                                "width": 1,
+                                "opacity": 1,
+                                "curveness": 0,
+                                "type": "solid"
+                            }
+                        },
+                        "data": [
+                            "\u75af\u72c2\u52a8\u7269\u57ce",
+                            "\u4e09\u50bb\u5927\u95f9\u5b9d\u83b1\u575e",
+                            "\u6211\u4e0d\u662f\u836f\u795e",
+                            "\u76d7\u68a6\u7a7a\u95f4",
+                            "\u6cf0\u5766\u5c3c\u514b\u53f7",
+                            "\u9738\u738b\u522b\u59ec",
+                            "\u963f\u7518\u6b63\u4f20",
+                            "\u5343\u4e0e\u5343\u5bfb",
+                            "\u8fd9\u4e2a\u6740\u624b\u4e0d\u592a\u51b7",
+                            "\u8096\u7533\u514b\u7684\u6551\u8d4e"
+                        ]
+                    }
+                ],
+                "title": [
+                    {
+                        "padding": 5,
+                        "itemGap": 10
+                    }
+                ]
+            };
+                    chart_24a5e53327d447a2bbec9d0ae2546b0d.setOption(option_24a5e53327d447a2bbec9d0ae2546b0d);
+                </script>
+            </div>
+            <div style="color: white;width: 690px;height: 20px;text-align: center;margin: 20px 0;background-color: #081832;font-size: 14px;">豆瓣电影这个TOP10基本上都看了，都是一些有故事的电影</div>
+        </div>
+        <div class="left div_any01">
+            <div class="div_any_child">
+                <div class="div_any_title"><img src="https://hbimg.huabanimg.com/36c78d1362ceacba1e834277f0bfc18493f97a20161c-uEf9iq">TOP250-中外电影年份分布</div>
+                <p id="f4bb40b0d15e4961b8e8c93570eed290" class="chart-container" style="width:690px; height:380px;"></p>
+                <script>
+                    var chart_f4bb40b0d15e4961b8e8c93570eed290 = echarts.init(
+                        document.getElementById('f4bb40b0d15e4961b8e8c93570eed290'), 'wonderland', {renderer: 'canvas'});
+                    var option_f4bb40b0d15e4961b8e8c93570eed290 = {
+                "animation": true,
+                "animationThreshold": 2000,
+                "animationDuration": 1000,
+                "animationEasing": "cubicOut",
+                "animationDelay": 0,
+                "animationDurationUpdate": 300,
+                "animationEasingUpdate": "cubicOut",
+                "animationDelayUpdate": 0,
+                "series": [
+                    {
+                        "type": "line",
+                        "name": "\u4e2d\u56fd",
+                        "connectNulls": false,
+                        "symbolSize": 4,
+                        "showSymbol": true,
+                        "smooth": false,
+                        "clip": true,
+                        "step": false,
+                        "data": [
+                            [
+                                "1931",
+                                0
+                            ],
+                            [
+                                "1936",
+                                0
+                            ],
+                            [
+                                "1939",
+                                0
+                            ],
+                            [
+                                "1940",
+                                0
+                            ],
+                            [
+                                "1950",
+                                0
+                            ],
+                            [
+                                "1952",
+                                0
+                            ],
+                            [
+                                "1953",
+                                0
+                            ],
+                            [
+                                "1954",
+                                0
+                            ],
+                            [
+                                "1957",
+                                0
+                            ],
+                            [
+                                "1960",
+                                0
+                            ],
+                            [
+                                "1961",
+                                0
+                            ],
+                            [
+                                "1965",
+                                0
+                            ],
+                            [
+                                "1966",
+                                0
+                            ],
+                            [
+                                "1968",
+                                0
+                            ],
+                            [
+                                "1971",
+                                0
+                            ],
+                            [
+                                "1972",
+                                0
+                            ],
+                            [
+                                "1974",
+                                0
+                            ],
+                            [
+                                "1975",
+                                0
+                            ],
+                            [
+                                "1979",
+                                1
+                            ],
+                            [
+                                "1983",
+                                1
+                            ],
+                            [
+                                "1984",
+                                0
+                            ],
+                            [
+                                "1986",
+                                0
+                            ],
+                            [
+                                "1987",
+                                0
+                            ],
+                            [
+                                "1988",
+                                0
+                            ],
+                            [
+                                "1989",
+                                0
+                            ],
+                            [
+                                "1990",
+                                0
+                            ],
+                            [
+                                "1991",
+                                0
+                            ],
+                            [
+                                "1992",
+                                0
+                            ],
+                            [
+                                "1993",
+                                1
+                            ],
+                            [
+                                "1994",
+                                2
+                            ],
+                            [
+                                "1995",
+                                0
+                            ],
+                            [
+                                "1996",
+                                0
+                            ],
+                            [
+                                "1997",
+                                0
+                            ],
+                            [
+                                "1998",
+                                0
+                            ],
+                            [
+                                "1999",
+                                0
+                            ],
+                            [
+                                "2000",
+                                1
+                            ],
+                            [
+                                "2001",
+                                0
+                            ],
+                            [
+                                "2002",
+                                0
+                            ],
+                            [
+                                "2003",
+                                0
+                            ],
+                            [
+                                "2004",
+                                2
+                            ],
+                            [
+                                "2005",
+                                0
+                            ],
+                            [
+                                "2006",
+                                1
+                            ],
+                            [
+                                "2007",
+                                0
+                            ],
+                            [
+                                "2008",
+                                0
+                            ],
+                            [
+                                "2009",
+                                0
+                            ],
+                            [
+                                "2010",
+                                1
+                            ],
+                            [
+                                "2011",
+                                0
+                            ],
+                            [
+                                "2012",
+                                0
+                            ],
+                            [
+                                "2013",
+                                0
+                            ],
+                            [
+                                "2014",
+                                1
+                            ],
+                            [
+                                "2015",
+                                1
+                            ],
+                            [
+                                "2016",
+                                1
+                            ],
+                            [
+                                "2017",
+                                1
+                            ],
+                            [
+                                "2018",
+                                1
+                            ],
+                            [
+                                "2019",
+                                0
+                            ]
+                        ],
+                        "hoverAnimation": true,
+                        "label": {
+                            "show": false,
+                            "position": "top",
+                            "margin": 8
+                        },
+                        "lineStyle": {
+                            "show": true,
+                            "width": 1,
+                            "opacity": 1,
+                            "curveness": 0,
+                            "type": "solid"
+                        },
+                        "areaStyle": {
+                            "opacity": 0
+                        },
+                        "zlevel": 0,
+                        "z": 0,
+                        "rippleEffect": {
+                            "show": true,
+                            "brushType": "stroke",
+                            "scale": 2.5,
+                            "period": 4
+                        }
+                    },
+                    {
+                        "type": "line",
+                        "name": "\u5916\u56fd",
+                        "connectNulls": false,
+                        "symbolSize": 4,
+                        "showSymbol": true,
+                        "smooth": false,
+                        "clip": true,
+                        "step": false,
+                        "data": [
+                            [
+                                "1931",
+                                1
+                            ],
+                            [
+                                "1936",
+                                1
+                            ],
+                            [
+                                "1939",
+                                1
+                            ],
+                            [
+                                "1940",
+                                1
+                            ],
+                            [
+                                "1950",
+                                1
+                            ],
+                            [
+                                "1952",
+                                1
+                            ],
+                            [
+                                "1953",
+                                2
+                            ],
+                            [
+                                "1954",
+                                1
+                            ],
+                            [
+                                "1957",
+                                2
+                            ],
+                            [
+                                "1960",
+                                1
+                            ],
+                            [
+                                "1961",
+                                1
+                            ],
+                            [
+                                "1965",
+                                1
+                            ],
+                            [
+                                "1966",
+                                1
+                            ],
+                            [
+                                "1968",
+                                1
+                            ],
+                            [
+                                "1971",
+                                1
+                            ],
+                            [
+                                "1972",
+                                1
+                            ],
+                            [
+                                "1974",
+                                1
+                            ],
+                            [
+                                "1975",
+                                1
+                            ],
+                            [
+                                "1979",
+                                0
+                            ],
+                            [
+                                "1983",
+                                0
+                            ],
+                            [
+                                "1984",
+                                2
+                            ],
+                            [
+                                "1986",
+                                2
+                            ],
+                            [
+                                "1987",
+                                3
+                            ],
+                            [
+                                "1988",
+                                4
+                            ],
+                            [
+                                "1989",
+                                2
+                            ],
+                            [
+                                "1990",
+                                3
+                            ],
+                            [
+                                "1991",
+                                4
+                            ],
+                            [
+                                "1992",
+                                2
+                            ],
+                            [
+                                "1993",
+                                6
+                            ],
+                            [
+                                "1994",
+                                10
+                            ],
+                            [
+                                "1995",
+                                7
+                            ],
+                            [
+                                "1996",
+                                2
+                            ],
+                            [
+                                "1997",
+                                8
+                            ],
+                            [
+                                "1998",
+                                5
+                            ],
+                            [
+                                "1999",
+                                6
+                            ],
+                            [
+                                "2000",
+                                4
+                            ],
+                            [
+                                "2001",
+                                9
+                            ],
+                            [
+                                "2002",
+                                8
+                            ],
+                            [
+                                "2003",
+                                8
+                            ],
+                            [
+                                "2004",
+                                11
+                            ],
+                            [
+                                "2005",
+                                4
+                            ],
+                            [
+                                "2006",
+                                8
+                            ],
+                            [
+                                "2007",
+                                4
+                            ],
+                            [
+                                "2008",
+                                9
+                            ],
+                            [
+                                "2009",
+                                9
+                            ],
+                            [
+                                "2010",
+                                12
+                            ],
+                            [
+                                "2011",
+                                9
+                            ],
+                            [
+                                "2012",
+                                5
+                            ],
+                            [
+                                "2013",
+                                11
+                            ],
+                            [
+                                "2014",
+                                8
+                            ],
+                            [
+                                "2015",
+                                9
+                            ],
+                            [
+                                "2016",
+                                8
+                            ],
+                            [
+                                "2017",
+                                6
+                            ],
+                            [
+                                "2018",
+                                6
+                            ],
+                            [
+                                "2019",
+                                1
+                            ]
+                        ],
+                        "hoverAnimation": true,
+                        "label": {
+                            "show": false,
+                            "position": "top",
+                            "margin": 8
+                        },
+                        "lineStyle": {
+                            "show": true,
+                            "width": 1,
+                            "opacity": 1,
+                            "curveness": 0,
+                            "type": "solid"
+                        },
+                        "areaStyle": {
+                            "opacity": 0
+                        },
+                        "zlevel": 0,
+                        "z": 0,
+                        "rippleEffect": {
+                            "show": true,
+                            "brushType": "stroke",
+                            "scale": 2.5,
+                            "period": 4
+                        }
+                    }
+                ],
+                "legend": [
+                    {
+                        "data": [
+                            "\u4e2d\u56fd",
+                            "\u5916\u56fd"
+                        ],
+                        "selected": {
+                            "\u4e2d\u56fd": true,
+                            "\u5916\u56fd": true
+                        },
+                        "show": true,
+                        "left": "center",
+                        "top": "5%",
+                        "orient": "vertical",
+                        "padding": 5,
+                        "itemGap": 10,
+                        "itemWidth": 25,
+                        "itemHeight": 14,
+                        "textStyle": {
+                            "fontFamily": "Times New Roman",
+                            "fontSize": 16,
+                        }
+                    }
+                ],
+                "tooltip": {
+                    "show": true,
+                    "trigger": "item",
+                    "triggerOn": "mousemove|click",
+                    "axisPointer": {
+                        "type": "line"
+                    },
+                    "showContent": true,
+                    "alwaysShowContent": false,
+                    "showDelay": 0,
+                    "hideDelay": 100,
+                    "textStyle": {
+                        "fontSize": 14
+                    },
+                    "borderWidth": 0,
+                    "padding": 5
+                },
+                "xAxis": [
+                    {
+                        "show": true,
+                        "scale": false,
+                        "nameLocation": "end",
+                        "nameGap": 15,
+                        "gridIndex": 0,
+                        "inverse": false,
+                        "offset": 0,
+                        "splitNumber": 5,
+                        "minInterval": 0,
+                        "splitLine": {
+                            "show": false,
+                            "lineStyle": {
+                                "show": true,
+                                "width": 1,
+                                "opacity": 1,
+                                "curveness": 0,
+                                "type": "solid"
+                            }
+                        },
+                        "data": [
+                            "1931",
+                            "1936",
+                            "1939",
+                            "1940",
+                            "1950",
+                            "1952",
+                            "1953",
+                            "1954",
+                            "1957",
+                            "1960",
+                            "1961",
+                            "1965",
+                            "1966",
+                            "1968",
+                            "1971",
+                            "1972",
+                            "1974",
+                            "1975",
+                            "1979",
+                            "1983",
+                            "1984",
+                            "1986",
+                            "1987",
+                            "1988",
+                            "1989",
+                            "1990",
+                            "1991",
+                            "1992",
+                            "1993",
+                            "1994",
+                            "1995",
+                            "1996",
+                            "1997",
+                            "1998",
+                            "1999",
+                            "2000",
+                            "2001",
+                            "2002",
+                            "2003",
+                            "2004",
+                            "2005",
+                            "2006",
+                            "2007",
+                            "2008",
+                            "2009",
+                            "2010",
+                            "2011",
+                            "2012",
+                            "2013",
+                            "2014",
+                            "2015",
+                            "2016",
+                            "2017",
+                            "2018",
+                            "2019"
+                        ]
+                    }
+                ],
+                "yAxis": [
+                    {
+                        "show": true,
+                        "scale": false,
+                        "nameLocation": "end",
+                        "nameGap": 15,
+                        "gridIndex": 0,
+                        "inverse": false,
+                        "offset": 0,
+                        "splitNumber": 5,
+                        "minInterval": 0,
+                        "splitLine": {
+                            "show": false,
+                            "lineStyle": {
+                                "show": true,
+                                "width": 1,
+                                "opacity": 1,
+                                "curveness": 0,
+                                "type": "solid"
+                            }
+                        }
+                    }
+                ],
+                "title": [
+                    {
+                        "padding": 5,
+                        "itemGap": 10
+                    }
+                ],
+                "dataZoom": {
+                    "show": true,
+                    "type": "slider",
+                    "realtime": true,
+                    "start": 20,
+                    "end": 80,
+                    "orient": "horizontal",
+                    "zoomLock": false,
+                    "filterMode": "filter"
+                }
+            };
+                    chart_f4bb40b0d15e4961b8e8c93570eed290.setOption(option_f4bb40b0d15e4961b8e8c93570eed290);
+                </script>
+            </div>
+            <div style="color: white;width: 690px;height: 20px;text-align: center;margin: 20px 0;background-color: #081832;font-size: 14px;">明显感受到了国产电影和国外电影的差距，90年代还行</div>
+            <div class="div_any_child">
+                <div class="div_any_title"><img src="https://hbimg.huabanimg.com/87a4d432605be6784764cfea72436006a4703ab61517-UaLX4V">豆瓣电影TOP250电影类型分布</div>
+                <p id="c6396557357245dcb110cc1a88477b3a" class="chart-container" style="width:690px; height:380px;"></p>
+                <script>
+                    var chart_c6396557357245dcb110cc1a88477b3a = echarts.init(
+                        document.getElementById('c6396557357245dcb110cc1a88477b3a'), 'white', {renderer: 'canvas'});
+                    var option_c6396557357245dcb110cc1a88477b3a = {
+                "animation": true,
+                "animationThreshold": 2000,
+                "animationDuration": 1000,
+                "animationEasing": "cubicOut",
+                "animationDelay": 0,
+                "animationDurationUpdate": 300,
+                "animationEasingUpdate": "cubicOut",
+                "animationDelayUpdate": 0,
+                "color": [
+                    "#c23531",
+                    "#2f4554",
+                    "#61a0a8",
+                    "#d48265",
+                    "#749f83",
+                    "#ca8622",
+                    "#bda29a",
+                    "#6e7074",
+                    "#546570",
+                    "#c4ccd3",
+                    "#f05b72",
+                    "#ef5b9c",
+                    "#f47920",
+                    "#905a3d",
+                    "#fab27b",
+                    "#2a5caa",
+                    "#444693",
+                    "#726930",
+                    "#b2d235",
+                    "#6d8346",
+                    "#ac6767",
+                    "#1d953f",
+                    "#6950a1",
+                    "#918597"
+                ],
+                "series": [
+                    {
+                        "type": "treemap",
+                        "name": "\u7535\u5f71\u7c7b\u578b",
+                        "data": [
+                            {
+                                "name": "\u72af\u7f6a",
+                                "value": 43
+                            },
+                            {
+                                "name": "\u5267\u60c5",
+                                "value": 183
+                            },
+                            {
+                                "name": "\u7231\u60c5",
+                                "value": 55
+                            },
+                            {
+                                "name": "\u540c\u6027",
+                                "value": 8
+                            },
+                            {
+                                "name": "\u52a8\u4f5c",
+                                "value": 32
+                            },
+                            {
+                                "name": "\u707e\u96be",
+                                "value": 2
+                            },
+                            {
+                                "name": "\u559c\u5267",
+                                "value": 54
+                            },
+                            {
+                                "name": "\u6218\u4e89",
+                                "value": 16
+                            },
+                            {
+                                "name": "\u52a8\u753b",
+                                "value": 34
+                            },
+                            {
+                                "name": "\u5947\u5e7b",
+                                "value": 40
+                            },
+                            {
+                                "name": "\u5386\u53f2",
+                                "value": 10
+                            },
+                            {
+                                "name": "\u79d1\u5e7b",
+                                "value": 23
+                            },
+                            {
+                                "name": "\u60ac\u7591",
+                                "value": 31
+                            },
+                            {
+                                "name": "\u5192\u9669",
+                                "value": 44
+                            },
+                            {
+                                "name": "\u97f3\u4e50",
+                                "value": 7
+                            },
+                            {
+                                "name": "\u6b4c\u821e",
+                                "value": 5
+                            },
+                            {
+                                "name": "\u53e4\u88c5",
+                                "value": 9
+                            },
+                            {
+                                "name": "\u4f20\u8bb0",
+                                "value": 15
+                            },
+                            {
+                                "name": "\u5bb6\u5ead",
+                                "value": 23
+                            },
+                            {
+                                "name": "\u60ca\u609a",
+                                "value": 33
+                            },
+                            {
+                                "name": "\u8fd0\u52a8",
+                                "value": 1
+                            },
+                            {
+                                "name": "\u897f\u90e8",
+                                "value": 3
+                            },
+                            {
+                                "name": "\u60c5\u8272",
+                                "value": 2
+                            },
+                            {
+                                "name": "\u513f\u7ae5",
+                                "value": 5
+                            },
+                            {
+                                "name": "\u7eaa\u5f55\u7247",
+                                "value": 5
+                            },
+                            {
+                                "name": "\u6b66\u4fa0",
+                                "value": 4
+                            },
+                            {
+                                "name": "\u6050\u6016",
+                                "value": 2
+                            }
+                        ],
+                        "width": "80%",
+                        "height": "80%",
+                        "label": {
+                            "show": true,
+                            "position": "inside",
+                            "margin": 8
+                        },
+                        "upperlabel": {
+                            "show": true,
+                            "position": "inside",
+                            "margin": 8
+                        },
+                        "leafDepth": 1,
+                        "drillDownIcon": "\u25b6",
+                        "roam": true,
+                        "nodeClick": "zoomToNode",
+                        "zoomToNodeRatio": 0.1024,
+                        "visualMin": 300,
+                        "colorMappingBy": "index",
+                        "visibleMin": 10
+                    }
+                ],
+                "legend": [
+                    {
+                        "data": [
+                            "\u7535\u5f71\u7c7b\u578b"
+                        ],
+                        "selected": {
+                            "\u7535\u5f71\u7c7b\u578b": true
+                        },
+                        "show": true,
+                        "left": "right",
+                        "top": "5%",
+                        "padding": 0,
+                        "itemGap": 10,
+                        "itemWidth": 25,
+                        "itemHeight": 14,
+                        "textStyle": {
+                            "fontFamily": "Times New Roman",
+                            "fontSize": 16,
+                            "color": "white"
+                        }
+                    }
+                ],
+                "tooltip": {
+                    "show": true,
+                    "trigger": "item",
+                    "triggerOn": "mousemove|click",
+                    "axisPointer": {
+                        "type": "line"
+                    },
+                    "showContent": true,
+                    "alwaysShowContent": false,
+                    "showDelay": 0,
+                    "hideDelay": 100,
+                    "textStyle": {
+                        "fontSize": 14
+                    },
+                    "borderWidth": 0,
+                    "padding": 5
+                },
+                "title": [
+                    {
+                        "subtext": "2020/11",
+                        "left": "leafDepth",
+                        "padding": 5,
+                        "itemGap": 10
+                    }
+                ]
+            };
+                    chart_c6396557357245dcb110cc1a88477b3a.setOption(option_c6396557357245dcb110cc1a88477b3a);
+                </script>
+            </div>
+            <div style="color: white;width: 690px;height: 20px;text-align: center;margin: 20px 0;background-color: #081832;font-size: 14px;">和「2018年电影分析」比较，发现榜单里「动作」片减少不少，其他差别不大。<br/>这算不算是间接说明国人更喜欢视觉上的东西呢？</div>
+        </div>
+        <div class="left div_any01">
+            <div class="div_any_child">
+                <div class="div_any_title"><img src="https://hbimg.huabanimg.com/8eb8460093f40dc1153505c053a6fc44538e63121ed1-tssZli">豆瓣电影TOP250-排名评分维度</div>
+                <p id="62e7931fe67140a3ad9280667a92189f" class="chart-container" style="width:690px; height:380px;"></p>
+                <script>
+                    var chart_62e7931fe67140a3ad9280667a92189f = echarts.init(
+                        document.getElementById('62e7931fe67140a3ad9280667a92189f'), 'wonderland', {renderer: 'canvas'});
+                    var option_62e7931fe67140a3ad9280667a92189f = {
+                "animation": true,
+                "animationThreshold": 2000,
+                "animationDuration": 1000,
+                "animationEasing": "cubicOut",
+                "animationDelay": 0,
+                "animationDurationUpdate": 300,
+                "animationEasingUpdate": "cubicOut",
+                "animationDelayUpdate": 0,
+                "series": [
+                    {
+                        "type": "scatter",
+                        "name": "\u8bc4\u5206",
+                        "symbolSize": 10,
+                        "data": [
+                            [
+                                1,
+                                9.7
+                            ],
+                            [
+                                2,
+                                9.6
+                            ],
+                            [
+                                3,
+                                9.5
+                            ],
+                            [
+                                4,
+                                9.4
+                            ],
+                            [
+                                5,
+                                9.4
+                            ],
+                            [
+                                6,
+                                9.5
+                            ],
+                            [
+                                7,
+                                9.4
+                            ],
+                            [
+                                8,
+                                9.5
+                            ],
+                            [
+                                9,
+                                9.3
+                            ],
+                            [
+                                10,
+                                9.4
+                            ],
+                            [
+                                11,
+                                9.3
+                            ],
+                            [
+                                12,
+                                9.3
+                            ],
+                            [
+                                13,
+                                9.3
+                            ],
+                            [
+                                14,
+                                9.2
+                            ],
+                            [
+                                15,
+                                9.3
+                            ],
+                            [
+                                16,
+                                9.3
+                            ],
+                            [
+                                17,
+                                9.2
+                            ],
+                            [
+                                18,
+                                9.3
+                            ],
+                            [
+                                19,
+                                9.2
+                            ],
+                            [
+                                20,
+                                9.2
+                            ],
+                            [
+                                21,
+                                9.3
+                            ],
+                            [
+                                22,
+                                9.2
+                            ],
+                            [
+                                23,
+                                9.1
+                            ],
+                            [
+                                24,
+                                9.1
+                            ],
+                            [
+                                25,
+                                9.2
+                            ],
+                            [
+                                26,
+                                9.6
+                            ],
+                            [
+                                27,
+                                9.2
+                            ],
+                            [
+                                28,
+                                9.3
+                            ],
+                            [
+                                29,
+                                9.3
+                            ],
+                            [
+                                30,
+                                9.1
+                            ],
+                            [
+                                31,
+                                9.3
+                            ],
+                            [
+                                32,
+                                9.1
+                            ],
+                            [
+                                33,
+                                9.2
+                            ],
+                            [
+                                34,
+                                9.0
+                            ],
+                            [
+                                35,
+                                9.0
+                            ],
+                            [
+                                36,
+                                9.1
+                            ],
+                            [
+                                37,
+                                9.4
+                            ],
+                            [
+                                38,
+                                9.1
+                            ],
+                            [
+                                39,
+                                9.3
+                            ],
+                            [
+                                40,
+                                9.3
+                            ],
+                            [
+                                41,
+                                9.1
+                            ],
+                            [
+                                42,
+                                9.1
+                            ],
+                            [
+                                43,
+                                9.0
+                            ],
+                            [
+                                44,
+                                9.0
+                            ],
+                            [
+                                45,
+                                9.0
+                            ],
+                            [
+                                46,
+                                9.1
+                            ],
+                            [
+                                47,
+                                9.2
+                            ],
+                            [
+                                48,
+                                9.2
+                            ],
+                            [
+                                49,
+                                9.0
+                            ],
+                            [
+                                50,
+                                9.3
+                            ],
+                            [
+                                51,
+                                9.0
+                            ],
+                            [
+                                52,
+                                9.2
+                            ],
+                            [
+                                53,
+                                9.0
+                            ],
+                            [
+                                54,
+                                9.1
+                            ],
+                            [
+                                55,
+                                9.1
+                            ],
+                            [
+                                56,
+                                9.2
+                            ],
+                            [
+                                57,
+                                9.0
+                            ],
+                            [
+                                58,
+                                9.0
+                            ],
+                            [
+                                59,
+                                9.1
+                            ],
+                            [
+                                60,
+                                9.1
+                            ],
+                            [
+                                61,
+                                9.0
+                            ],
+                            [
+                                62,
+                                9.1
+                            ],
+                            [
+                                63,
+                                8.8
+                            ],
+                            [
+                                64,
+                                8.9
+                            ],
+                            [
+                                65,
+                                8.9
+                            ],
+                            [
+                                66,
+                                9.1
+                            ],
+                            [
+                                67,
+                                8.8
+                            ],
+                            [
+                                68,
+                                9.2
+                            ],
+                            [
+                                69,
+                                8.9
+                            ],
+                            [
+                                70,
+                                9.0
+                            ],
+                            [
+                                71,
+                                9.2
+                            ],
+                            [
+                                72,
+                                9.1
+                            ],
+                            [
+                                73,
+                                8.9
+                            ],
+                            [
+                                74,
+                                9.0
+                            ],
+                            [
+                                75,
+                                9.3
+                            ],
+                            [
+                                76,
+                                9.2
+                            ],
+                            [
+                                77,
+                                8.9
+                            ],
+                            [
+                                78,
+                                8.9
+                            ],
+                            [
+                                79,
+                                8.8
+                            ],
+                            [
+                                80,
+                                8.8
+                            ],
+                            [
+                                81,
+                                8.8
+                            ],
+                            [
+                                82,
+                                8.8
+                            ],
+                            [
+                                83,
+                                8.9
+                            ],
+                            [
+                                84,
+                                8.8
+                            ],
+                            [
+                                85,
+                                8.9
+                            ],
+                            [
+                                86,
+                                8.9
+                            ],
+                            [
+                                87,
+                                9.3
+                            ],
+                            [
+                                88,
+                                8.7
+                            ],
+                            [
+                                89,
+                                8.9
+                            ],
+                            [
+                                90,
+                                8.7
+                            ],
+                            [
+                                91,
+                                8.8
+                            ],
+                            [
+                                92,
+                                8.9
+                            ],
+                            [
+                                93,
+                                8.8
+                            ],
+                            [
+                                94,
+                                8.8
+                            ],
+                            [
+                                95,
+                                8.8
+                            ],
+                            [
+                                96,
+                                8.7
+                            ],
+                            [
+                                97,
+                                9.1
+                            ],
+                            [
+                                98,
+                                8.8
+                            ],
+                            [
+                                99,
+                                8.9
+                            ],
+                            [
+                                100,
+                                8.9
+                            ],
+                            [
+                                101,
+                                9.0
+                            ],
+                            [
+                                102,
+                                8.9
+                            ],
+                            [
+                                103,
+                                9.0
+                            ],
+                            [
+                                104,
+                                8.8
+                            ],
+                            [
+                                105,
+                                8.9
+                            ],
+                            [
+                                106,
+                                8.7
+                            ],
+                            [
+                                107,
+                                8.8
+                            ],
+                            [
+                                108,
+                                9.0
+                            ],
+                            [
+                                109,
+                                8.7
+                            ],
+                            [
+                                110,
+                                8.8
+                            ],
+                            [
+                                111,
+                                8.6
+                            ],
+                            [
+                                112,
+                                9.0
+                            ],
+                            [
+                                113,
+                                8.8
+                            ],
+                            [
+                                114,
+                                8.8
+                            ],
+                            [
+                                115,
+                                8.9
+                            ],
+                            [
+                                116,
+                                8.9
+                            ],
+                            [
+                                117,
+                                8.7
+                            ],
+                            [
+                                118,
+                                9.1
+                            ],
+                            [
+                                119,
+                                8.7
+                            ],
+                            [
+                                120,
+                                8.9
+                            ],
+                            [
+                                121,
+                                8.8
+                            ],
+                            [
+                                122,
+                                8.9
+                            ],
+                            [
+                                123,
+                                8.8
+                            ],
+                            [
+                                124,
+                                8.7
+                            ],
+                            [
+                                125,
+                                8.7
+                            ],
+                            [
+                                126,
+                                8.8
+                            ],
+                            [
+                                127,
+                                8.8
+                            ],
+                            [
+                                128,
+                                8.8
+                            ],
+                            [
+                                129,
+                                8.6
+                            ],
+                            [
+                                130,
+                                8.8
+                            ],
+                            [
+                                131,
+                                8.7
+                            ],
+                            [
+                                132,
+                                9.5
+                            ],
+                            [
+                                133,
+                                9.1
+                            ],
+                            [
+                                134,
+                                8.8
+                            ],
+                            [
+                                135,
+                                8.7
+                            ],
+                            [
+                                136,
+                                8.6
+                            ],
+                            [
+                                137,
+                                9.2
+                            ],
+                            [
+                                138,
+                                8.7
+                            ],
+                            [
+                                139,
+                                8.8
+                            ],
+                            [
+                                140,
+                                8.6
+                            ],
+                            [
+                                141,
+                                8.7
+                            ],
+                            [
+                                142,
+                                8.9
+                            ],
+                            [
+                                143,
+                                8.7
+                            ],
+                            [
+                                144,
+                                8.5
+                            ],
+                            [
+                                145,
+                                9.1
+                            ],
+                            [
+                                146,
+                                8.9
+                            ],
+                            [
+                                147,
+                                8.7
+                            ],
+                            [
+                                148,
+                                8.7
+                            ],
+                            [
+                                149,
+                                8.7
+                            ],
+                            [
+                                150,
+                                8.9
+                            ],
+                            [
+                                151,
+                                9.3
+                            ],
+                            [
+                                152,
+                                8.9
+                            ],
+                            [
+                                153,
+                                8.7
+                            ],
+                            [
+                                154,
+                                8.9
+                            ],
+                            [
+                                155,
+                                8.7
+                            ],
+                            [
+                                156,
+                                8.8
+                            ],
+                            [
+                                157,
+                                8.9
+                            ],
+                            [
+                                158,
+                                8.7
+                            ],
+                            [
+                                159,
+                                8.8
+                            ],
+                            [
+                                160,
+                                8.7
+                            ],
+                            [
+                                161,
+                                8.8
+                            ],
+                            [
+                                162,
+                                8.7
+                            ],
+                            [
+                                163,
+                                8.7
+                            ],
+                            [
+                                164,
+                                8.9
+                            ],
+                            [
+                                165,
+                                8.6
+                            ],
+                            [
+                                166,
+                                8.7
+                            ],
+                            [
+                                167,
+                                9.0
+                            ],
+                            [
+                                168,
+                                8.4
+                            ],
+                            [
+                                169,
+                                8.8
+                            ],
+                            [
+                                170,
+                                8.8
+                            ],
+                            [
+                                171,
+                                8.7
+                            ],
+                            [
+                                172,
+                                8.7
+                            ],
+                            [
+                                173,
+                                8.7
+                            ],
+                            [
+                                174,
+                                8.6
+                            ],
+                            [
+                                175,
+                                8.8
+                            ],
+                            [
+                                176,
+                                8.6
+                            ],
+                            [
+                                177,
+                                8.6
+                            ],
+                            [
+                                178,
+                                9.2
+                            ],
+                            [
+                                179,
+                                8.6
+                            ],
+                            [
+                                180,
+                                8.7
+                            ],
+                            [
+                                181,
+                                8.8
+                            ],
+                            [
+                                182,
+                                8.9
+                            ],
+                            [
+                                183,
+                                8.7
+                            ],
+                            [
+                                184,
+                                9.0
+                            ],
+                            [
+                                185,
+                                8.7
+                            ],
+                            [
+                                186,
+                                8.6
+                            ],
+                            [
+                                187,
+                                8.5
+                            ],
+                            [
+                                188,
+                                8.7
+                            ],
+                            [
+                                189,
+                                8.9
+                            ],
+                            [
+                                190,
+                                8.7
+                            ],
+                            [
+                                191,
+                                8.5
+                            ],
+                            [
+                                192,
+                                8.6
+                            ],
+                            [
+                                193,
+                                8.5
+                            ],
+                            [
+                                194,
+                                8.8
+                            ],
+                            [
+                                195,
+                                8.6
+                            ],
+                            [
+                                196,
+                                8.6
+                            ],
+                            [
+                                197,
+                                8.8
+                            ],
+                            [
+                                198,
+                                9.0
+                            ],
+                            [
+                                199,
+                                8.9
+                            ],
+                            [
+                                200,
+                                8.7
+                            ],
+                            [
+                                201,
+                                8.8
+                            ],
+                            [
+                                202,
+                                8.7
+                            ],
+                            [
+                                203,
+                                8.8
+                            ],
+                            [
+                                204,
+                                8.6
+                            ],
+                            [
+                                205,
+                                8.4
+                            ],
+                            [
+                                206,
+                                8.8
+                            ],
+                            [
+                                207,
+                                9.3
+                            ],
+                            [
+                                208,
+                                8.5
+                            ],
+                            [
+                                209,
+                                8.8
+                            ],
+                            [
+                                210,
+                                8.5
+                            ],
+                            [
+                                211,
+                                8.8
+                            ],
+                            [
+                                212,
+                                9.1
+                            ],
+                            [
+                                213,
+                                8.8
+                            ],
+                            [
+                                214,
+                                8.6
+                            ],
+                            [
+                                215,
+                                8.6
+                            ],
+                            [
+                                216,
+                                8.5
+                            ],
+                            [
+                                217,
+                                8.6
+                            ],
+                            [
+                                218,
+                                8.7
+                            ],
+                            [
+                                219,
+                                8.6
+                            ],
+                            [
+                                220,
+                                8.6
+                            ],
+                            [
+                                221,
+                                8.7
+                            ],
+                            [
+                                222,
+                                8.6
+                            ],
+                            [
+                                223,
+                                8.7
+                            ],
+                            [
+                                224,
+                                8.5
+                            ],
+                            [
+                                225,
+                                8.5
+                            ],
+                            [
+                                226,
+                                8.7
+                            ],
+                            [
+                                227,
+                                8.8
+                            ],
+                            [
+                                228,
+                                8.5
+                            ],
+                            [
+                                229,
+                                8.9
+                            ],
+                            [
+                                230,
+                                8.5
+                            ],
+                            [
+                                231,
+                                8.7
+                            ],
+                            [
+                                232,
+                                8.6
+                            ],
+                            [
+                                233,
+                                8.7
+                            ],
+                            [
+                                234,
+                                8.6
+                            ],
+                            [
+                                235,
+                                8.5
+                            ],
+                            [
+                                236,
+                                9.2
+                            ],
+                            [
+                                237,
+                                8.7
+                            ],
+                            [
+                                238,
+                                8.6
+                            ],
+                            [
+                                239,
+                                8.3
+                            ],
+                            [
+                                240,
+                                8.8
+                            ],
+                            [
+                                241,
+                                8.4
+                            ],
+                            [
+                                242,
+                                8.8
+                            ],
+                            [
+                                243,
+                                8.9
+                            ],
+                            [
+                                244,
+                                8.6
+                            ],
+                            [
+                                245,
+                                9.0
+                            ],
+                            [
+                                246,
+                                8.7
+                            ],
+                            [
+                                247,
+                                8.7
+                            ],
+                            [
+                                248,
+                                8.6
+                            ],
+                            [
+                                249,
+                                8.9
+                            ],
+                            [
+                                250,
+                                8.6
+                            ]
+                        ],
+                        "label": {
+                            "show": true,
+                            "position": "right",
+                            "margin": 8
+                        }
+                    }
+                ],
+                "legend": [
+                    {
+                        "data": [
+                            "\u8bc4\u5206"
+                        ],
+                        "selected": {
+                            "\u8bc4\u5206": true
+                        },
+                        "left": "center",
+                        "top": "5%",
+                        "show": true,
+                        "padding": 5,
+                        "itemGap": 10,
+                        "itemWidth": 25,
+                        "itemHeight": 14,
+                        "textStyle": {
+                                "fontFamily": "Times New Roman",
+                                "fontSize": 16,
+                                "color": "white",
+                        }
+                    }
+                ],
+                "tooltip": {
+                    "show": true,
+                    "trigger": "item",
+                    "triggerOn": "mousemove|click",
+                    "axisPointer": {
+                        "type": "line"
+                    },
+                    "showContent": true,
+                    "alwaysShowContent": false,
+                    "showDelay": 0,
+                    "hideDelay": 100,
+                    "textStyle": {
+                        "fontSize": 14
+                    },
+                    "borderWidth": 0,
+                    "padding": 5
+                },
+                "xAxis": [
+                    {
+                        "show": true,
+                        "scale": false,
+                        "nameLocation": "end",
+                        "nameGap": 15,
+                        "interval": 249,
+                        "gridIndex": 0,
+                        "axisLine": {
+                            "show": true,
+                            "onZero": true,
+                            "onZeroAxisIndex": 0,
+                            "lineStyle": {
+                                "show": true,
+                                "width": 1,
+                                "opacity": 1,
+                                "curveness": 0,
+                                "type": "solid"
+                            }
+                        },
+                        "axisTick": {
+                            "show": true,
+                            "alignWithLabel": false,
+                            "inside": false
+                        },
+                        "inverse": false,
+                        "offset": 0,
+                        "splitNumber": 50,
+                        "minInterval": 0,
+                        "splitLine": {
+                            "show": false,
+                            "lineStyle": {
+                                "show": true,
+                                "width": 1,
+                                "opacity": 1,
+                                "curveness": 0,
+                                "type": "solid"
+                            }
+                        },
+                        "data": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8,
+                            9,
+                            10,
+                            11,
+                            12,
+                            13,
+                            14,
+                            15,
+                            16,
+                            17,
+                            18,
+                            19,
+                            20,
+                            21,
+                            22,
+                            23,
+                            24,
+                            25,
+                            26,
+                            27,
+                            28,
+                            29,
+                            30,
+                            31,
+                            32,
+                            33,
+                            34,
+                            35,
+                            36,
+                            37,
+                            38,
+                            39,
+                            40,
+                            41,
+                            42,
+                            43,
+                            44,
+                            45,
+                            46,
+                            47,
+                            48,
+                            49,
+                            50,
+                            51,
+                            52,
+                            53,
+                            54,
+                            55,
+                            56,
+                            57,
+                            58,
+                            59,
+                            60,
+                            61,
+                            62,
+                            63,
+                            64,
+                            65,
+                            66,
+                            67,
+                            68,
+                            69,
+                            70,
+                            71,
+                            72,
+                            73,
+                            74,
+                            75,
+                            76,
+                            77,
+                            78,
+                            79,
+                            80,
+                            81,
+                            82,
+                            83,
+                            84,
+                            85,
+                            86,
+                            87,
+                            88,
+                            89,
+                            90,
+                            91,
+                            92,
+                            93,
+                            94,
+                            95,
+                            96,
+                            97,
+                            98,
+                            99,
+                            100,
+                            101,
+                            102,
+                            103,
+                            104,
+                            105,
+                            106,
+                            107,
+                            108,
+                            109,
+                            110,
+                            111,
+                            112,
+                            113,
+                            114,
+                            115,
+                            116,
+                            117,
+                            118,
+                            119,
+                            120,
+                            121,
+                            122,
+                            123,
+                            124,
+                            125,
+                            126,
+                            127,
+                            128,
+                            129,
+                            130,
+                            131,
+                            132,
+                            133,
+                            134,
+                            135,
+                            136,
+                            137,
+                            138,
+                            139,
+                            140,
+                            141,
+                            142,
+                            143,
+                            144,
+                            145,
+                            146,
+                            147,
+                            148,
+                            149,
+                            150,
+                            151,
+                            152,
+                            153,
+                            154,
+                            155,
+                            156,
+                            157,
+                            158,
+                            159,
+                            160,
+                            161,
+                            162,
+                            163,
+                            164,
+                            165,
+                            166,
+                            167,
+                            168,
+                            169,
+                            170,
+                            171,
+                            172,
+                            173,
+                            174,
+                            175,
+                            176,
+                            177,
+                            178,
+                            179,
+                            180,
+                            181,
+                            182,
+                            183,
+                            184,
+                            185,
+                            186,
+                            187,
+                            188,
+                            189,
+                            190,
+                            191,
+                            192,
+                            193,
+                            194,
+                            195,
+                            196,
+                            197,
+                            198,
+                            199,
+                            200,
+                            201,
+                            202,
+                            203,
+                            204,
+                            205,
+                            206,
+                            207,
+                            208,
+                            209,
+                            210,
+                            211,
+                            212,
+                            213,
+                            214,
+                            215,
+                            216,
+                            217,
+                            218,
+                            219,
+                            220,
+                            221,
+                            222,
+                            223,
+                            224,
+                            225,
+                            226,
+                            227,
+                            228,
+                            229,
+                            230,
+                            231,
+                            232,
+                            233,
+                            234,
+                            235,
+                            236,
+                            237,
+                            238,
+                            239,
+                            240,
+                            241,
+                            242,
+                            243,
+                            244,
+                            245,
+                            246,
+                            247,
+                            248,
+                            249,
+                            250
+                        ]
+                    }
+                ],
+                "yAxis": [
+                    {
+                        "show": true,
+                        "scale": false,
+                        "nameLocation": "end",
+                        "nameGap": 15,
+                        "gridIndex": 0,
+                        "axisTick": {
+                            "show": true,
+                            "alignWithLabel": false,
+                            "inside": false
+                        },
+                        "axisLabel": {
+                            "show": true,
+                            "position": "top",
+                            "color": "skyblue",
+                            "margin": 8,
+                            "fontSize": 16,
+                            "fontFamily": "Times New Roman"
+                        },
+                        "inverse": false,
+                        "offset": 0,
+                        "splitNumber": 5,
+                        "min": 8,
+                        "max": 10,
+                        "minInterval": 0,
+                        "splitLine": {
+                            "show": false,
+                            "lineStyle": {
+                                "show": true,
+                                "width": 1,
+                                "opacity": 1,
+                                "curveness": 0,
+                                "type": "solid"
+                            }
+                        }
+                    }
+                ],
+                "title": [
+                    {
+                        "padding": 5,
+                        "itemGap": 10
+                    }
+                ],
+                "visualMap": {
+                    "show": true,
+                    "type": "continuous",
+                    "min": 8.3,
+                    "max": 9.7,
+                    "text": [
+                        "High",
+                        "Low"
+                    ],
+                    "inRange": {
+                        "symbolSize": [
+                            20,
+                            50
+                        ]
+                    },
+                    "calculable": true,
+                    "inverse": false,
+                    "splitNumber": 5,
+                    "dimension": [
+                        2186881,
+                        1622453,
+                        1650384,
+                        1834962,
+                        1604815,
+                        1024020,
+                        1718980,
+                        842038,
+                        1604530,
+                        1095184,
+                        1307411,
+                        1276807,
+                        1190564,
+                        1460398,
+                        1030629,
+                        1014467,
+                        1167347,
+                        715283,
+                        1405738,
+                        955777,
+                        715313,
+                        976602,
+                        1176372,
+                        1370891,
+                        761798,
+                        322988,
+                        796302,
+                        618019,
+                        586055,
+                        1184444,
+                        525365,
+                        745947,
+                        579955,
+                        1203753,
+                        1021935,
+                        1084406,
+                        351372,
+                        785575,
+                        487301,
+                        472330,
+                        752747,
+                        645314,
+                        930964,
+                        1601788,
+                        745706,
+                        652607,
+                        498062,
+                        467621,
+                        664712,
+                        305943,
+                        645219,
+                        399162,
+                        623090,
+                        530612,
+                        528455,
+                        407791,
+                        602685,
+                        593837,
+                        433795,
+                        440660,
+                        578291,
+                        465999,
+                        1231243,
+                        1175992,
+                        750788,
+                        451095,
+                        907866,
+                        321565,
+                        745543,
+                        493070,
+                        308106,
+                        383556,
+                        688768,
+                        455561,
+                        296951,
+                        319527,
+                        657820,
+                        635363,
+                        646604,
+                        711920,
+                        718758,
+                        743812,
+                        534982,
+                        675588,
+                        477672,
+                        566832,
+                        216335,
+                        1006656,
+                        584193,
+                        848245,
+                        722203,
+                        465870,
+                        606641,
+                        671468,
+                        509418,
+                        805559,
+                        277951,
+                        564427,
+                        498564,
+                        406678,
+                        312403,
+                        415744,
+                        322291,
+                        479376,
+                        418628,
+                        606051,
+                        464324,
+                        286282,
+                        686286,
+                        461225,
+                        788320,
+                        271119,
+                        548528,
+                        425826,
+                        359404,
+                        351533,
+                        555370,
+                        214672,
+                        761977,
+                        347807,
+                        396832,
+                        385329,
+                        415087,
+                        558451,
+                        583744,
+                        444730,
+                        480423,
+                        387828,
+                        745816,
+                        415754,
+                        497527,
+                        114336,
+                        203222,
+                        489707,
+                        495118,
+                        748231,
+                        167785,
+                        450979,
+                        383575,
+                        589043,
+                        616676,
+                        265975,
+                        427426,
+                        883690,
+                        190062,
+                        292906,
+                        463674,
+                        388932,
+                        472921,
+                        257060,
+                        143999,
+                        240759,
+                        1073935,
+                        235149,
+                        388269,
+                        328743,
+                        302290,
+                        479132,
+                        310433,
+                        639847,
+                        345259,
+                        654118,
+                        377056,
+                        230463,
+                        476418,
+                        438214,
+                        211425,
+                        1056882,
+                        323466,
+                        323308,
+                        466228,
+                        335623,
+                        429317,
+                        595918,
+                        264612,
+                        459362,
+                        549393,
+                        142796,
+                        658920,
+                        444092,
+                        309343,
+                        261622,
+                        406452,
+                        185531,
+                        323154,
+                        483506,
+                        506300,
+                        631047,
+                        221747,
+                        226903,
+                        607472,
+                        442576,
+                        614567,
+                        256113,
+                        372916,
+                        355026,
+                        305127,
+                        158248,
+                        181772,
+                        336923,
+                        234048,
+                        269231,
+                        225838,
+                        404724,
+                        800825,
+                        219748,
+                        99380,
+                        527572,
+                        213116,
+                        434805,
+                        198074,
+                        134518,
+                        226654,
+                        295739,
+                        338970,
+                        638500,
+                        393866,
+                        302174,
+                        370911,
+                        310032,
+                        276169,
+                        396432,
+                        441469,
+                        381486,
+                        425322,
+                        276259,
+                        198972,
+                        441752,
+                        160415,
+                        392891,
+                        274613,
+                        329924,
+                        1038838,
+                        382660,
+                        349873,
+                        99326,
+                        214130,
+                        325950,
+                        708962,
+                        194141,
+                        382898,
+                        220755,
+                        142498,
+                        282275,
+                        119878,
+                        226303,
+                        206845,
+                        405291,
+                        128051,
+                        295647
+                    ],
+                    "seriesIndex": [
+                        [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8,
+                            9,
+                            10,
+                            11,
+                            12,
+                            13,
+                            14,
+                            15,
+                            16,
+                            17,
+                            18,
+                            19,
+                            20,
+                            21,
+                            22,
+                            23,
+                            24,
+                            25,
+                            26,
+                            27,
+                            28,
+                            29,
+                            30,
+                            31,
+                            32,
+                            33,
+                            34,
+                            35,
+                            36,
+                            37,
+                            38,
+                            39,
+                            40,
+                            41,
+                            42,
+                            43,
+                            44,
+                            45,
+                            46,
+                            47,
+                            48,
+                            49,
+                            50,
+                            51,
+                            52,
+                            53,
+                            54,
+                            55,
+                            56,
+                            57,
+                            58,
+                            59,
+                            60,
+                            61,
+                            62,
+                            63,
+                            64,
+                            65,
+                            66,
+                            67,
+                            68,
+                            69,
+                            70,
+                            71,
+                            72,
+                            73,
+                            74,
+                            75,
+                            76,
+                            77,
+                            78,
+                            79,
+                            80,
+                            81,
+                            82,
+                            83,
+                            84,
+                            85,
+                            86,
+                            87,
+                            88,
+                            89,
+                            90,
+                            91,
+                            92,
+                            93,
+                            94,
+                            95,
+                            96,
+                            97,
+                            98,
+                            99,
+                            100,
+                            101,
+                            102,
+                            103,
+                            104,
+                            105,
+                            106,
+                            107,
+                            108,
+                            109,
+                            110,
+                            111,
+                            112,
+                            113,
+                            114,
+                            115,
+                            116,
+                            117,
+                            118,
+                            119,
+                            120,
+                            121,
+                            122,
+                            123,
+                            124,
+                            125,
+                            126,
+                            127,
+                            128,
+                            129,
+                            130,
+                            131,
+                            132,
+                            133,
+                            134,
+                            135,
+                            136,
+                            137,
+                            138,
+                            139,
+                            140,
+                            141,
+                            142,
+                            143,
+                            144,
+                            145,
+                            146,
+                            147,
+                            148,
+                            149,
+                            150,
+                            151,
+                            152,
+                            153,
+                            154,
+                            155,
+                            156,
+                            157,
+                            158,
+                            159,
+                            160,
+                            161,
+                            162,
+                            163,
+                            164,
+                            165,
+                            166,
+                            167,
+                            168,
+                            169,
+                            170,
+                            171,
+                            172,
+                            173,
+                            174,
+                            175,
+                            176,
+                            177,
+                            178,
+                            179,
+                            180,
+                            181,
+                            182,
+                            183,
+                            184,
+                            185,
+                            186,
+                            187,
+                            188,
+                            189,
+                            190,
+                            191,
+                            192,
+                            193,
+                            194,
+                            195,
+                            196,
+                            197,
+                            198,
+                            199,
+                            200,
+                            201,
+                            202,
+                            203,
+                            204,
+                            205,
+                            206,
+                            207,
+                            208,
+                            209,
+                            210,
+                            211,
+                            212,
+                            213,
+                            214,
+                            215,
+                            216,
+                            217,
+                            218,
+                            219,
+                            220,
+                            221,
+                            222,
+                            223,
+                            224,
+                            225,
+                            226,
+                            227,
+                            228,
+                            229,
+                            230,
+                            231,
+                            232,
+                            233,
+                            234,
+                            235,
+                            236,
+                            237,
+                            238,
+                            239,
+                            240,
+                            241,
+                            242,
+                            243,
+                            244,
+                            245,
+                            246,
+                            247,
+                            248,
+                            249,
+                            250
+                        ],
+                        [
+                            2186881,
+                            1622453,
+                            1650384,
+                            1834962,
+                            1604815,
+                            1024020,
+                            1718980,
+                            842038,
+                            1604530,
+                            1095184,
+                            1307411,
+                            1276807,
+                            1190564,
+                            1460398,
+                            1030629,
+                            1014467,
+                            1167347,
+                            715283,
+                            1405738,
+                            955777,
+                            715313,
+                            976602,
+                            1176372,
+                            1370891,
+                            761798,
+                            322988,
+                            796302,
+                            618019,
+                            586055,
+                            1184444,
+                            525365,
+                            745947,
+                            579955,
+                            1203753,
+                            1021935,
+                            1084406,
+                            351372,
+                            785575,
+                            487301,
+                            472330,
+                            752747,
+                            645314,
+                            930964,
+                            1601788,
+                            745706,
+                            652607,
+                            498062,
+                            467621,
+                            664712,
+                            305943,
+                            645219,
+                            399162,
+                            623090,
+                            530612,
+                            528455,
+                            407791,
+                            602685,
+                            593837,
+                            433795,
+                            440660,
+                            578291,
+                            465999,
+                            1231243,
+                            1175992,
+                            750788,
+                            451095,
+                            907866,
+                            321565,
+                            745543,
+                            493070,
+                            308106,
+                            383556,
+                            688768,
+                            455561,
+                            296951,
+                            319527,
+                            657820,
+                            635363,
+                            646604,
+                            711920,
+                            718758,
+                            743812,
+                            534982,
+                            675588,
+                            477672,
+                            566832,
+                            216335,
+                            1006656,
+                            584193,
+                            848245,
+                            722203,
+                            465870,
+                            606641,
+                            671468,
+                            509418,
+                            805559,
+                            277951,
+                            564427,
+                            498564,
+                            406678,
+                            312403,
+                            415744,
+                            322291,
+                            479376,
+                            418628,
+                            606051,
+                            464324,
+                            286282,
+                            686286,
+                            461225,
+                            788320,
+                            271119,
+                            548528,
+                            425826,
+                            359404,
+                            351533,
+                            555370,
+                            214672,
+                            761977,
+                            347807,
+                            396832,
+                            385329,
+                            415087,
+                            558451,
+                            583744,
+                            444730,
+                            480423,
+                            387828,
+                            745816,
+                            415754,
+                            497527,
+                            114336,
+                            203222,
+                            489707,
+                            495118,
+                            748231,
+                            167785,
+                            450979,
+                            383575,
+                            589043,
+                            616676,
+                            265975,
+                            427426,
+                            883690,
+                            190062,
+                            292906,
+                            463674,
+                            388932,
+                            472921,
+                            257060,
+                            143999,
+                            240759,
+                            1073935,
+                            235149,
+                            388269,
+                            328743,
+                            302290,
+                            479132,
+                            310433,
+                            639847,
+                            345259,
+                            654118,
+                            377056,
+                            230463,
+                            476418,
+                            438214,
+                            211425,
+                            1056882,
+                            323466,
+                            323308,
+                            466228,
+                            335623,
+                            429317,
+                            595918,
+                            264612,
+                            459362,
+                            549393,
+                            142796,
+                            658920,
+                            444092,
+                            309343,
+                            261622,
+                            406452,
+                            185531,
+                            323154,
+                            483506,
+                            506300,
+                            631047,
+                            221747,
+                            226903,
+                            607472,
+                            442576,
+                            614567,
+                            256113,
+                            372916,
+                            355026,
+                            305127,
+                            158248,
+                            181772,
+                            336923,
+                            234048,
+                            269231,
+                            225838,
+                            404724,
+                            800825,
+                            219748,
+                            99380,
+                            527572,
+                            213116,
+                            434805,
+                            198074,
+                            134518,
+                            226654,
+                            295739,
+                            338970,
+                            638500,
+                            393866,
+                            302174,
+                            370911,
+                            310032,
+                            276169,
+                            396432,
+                            441469,
+                            381486,
+                            425322,
+                            276259,
+                            198972,
+                            441752,
+                            160415,
+                            392891,
+                            274613,
+                            329924,
+                            1038838,
+                            382660,
+                            349873,
+                            99326,
+                            214130,
+                            325950,
+                            708962,
+                            194141,
+                            382898,
+                            220755,
+                            142498,
+                            282275,
+                            119878,
+                            226303,
+                            206845,
+                            405291,
+                            128051,
+                            295647
+                        ]
+                    ],
+                    "orient": "horizontal",
+                    "showLabel": true,
+                    "itemWidth": 20,
+                    "itemHeight": 140,
+                    "borderWidth": 0
+                }
+            };
+                    chart_62e7931fe67140a3ad9280667a92189f.setOption(option_62e7931fe67140a3ad9280667a92189f);
+                </script>
+            </div>
+            <div style="color: white;width: 690px;height: 20px;text-align: center;margin: 20px 0;background-color: #081832;font-size: 14px;">排名越靠前，评价人数越多，并且分数也越高</div>
+            <div class="div_any_child">
+                <div class="div_any_title"><img src="https://hbimg.huabanimg.com/dfa76f9f9170de707309184baa5bc65792f7bdc92365-GyPYyN">豆瓣电影TOP250-中外电影评分情况</div>
+                <p id="2781dbed78a44321bcb7738e78901270" class="chart-container" style="width:690px; height:380px;"></p>
+                <script>
+                    var chart_2781dbed78a44321bcb7738e78901270 = echarts.init(
+                        document.getElementById('2781dbed78a44321bcb7738e78901270'), 'wonderland', {renderer: 'canvas'});
+                    var option_2781dbed78a44321bcb7738e78901270 = {
+                "animation": true,
+                "animationThreshold": 2000,
+                "animationDuration": 1000,
+                "animationEasing": "cubicOut",
+                "animationDelay": 0,
+                "animationDurationUpdate": 300,
+                "animationEasingUpdate": "cubicOut",
+                "animationDelayUpdate": 0,
+                "series": [
+                    {
+                        "type": "boxplot",
+                        "name": "\u8bc4\u5206",
+                        "data": [
+                            [
+                                8.3,
+                                8.7,
+                                8.8,
+                                9.2,
+                                9.6
+                            ],
+                            [
+                                8.4,
+                                8.7,
+                                8.8,
+                                9.1,
+                                9.7
+                            ]
+                        ],
+                        "label": {
+                            "show": true,
+                            "position": "top",
+                            "margin": 8
+                        },
+                        "markPoint": {
+                            "label": {
+                                "show": true,
+                                "position": "inside",
+                                "color": "#fff",
+                                "margin": 8
+                            }
+                        },
+                        "markLine": {
+                            "silent": false,
+                            "precision": 2,
+                            "label": {
+                                "show": true,
+                                "position": "top",
+                                "margin": 8
+                            }
+                        }
+                    }
+                ],
+                "legend": [
+                    {
+                        "data": [
+                            "\u8bc4\u5206"
+                        ],
+                        "selected": {
+                            "\u8bc4\u5206": true
+                        },
+                        "show": true,
+                        "left": "center",
+                        "top": "5%",
+                        "orient": "vertical",
+                        "padding": 5,
+                        "itemGap": 10,
+                        "itemWidth": 25,
+                        "itemHeight": 14,
+                        "textStyle": {
+                            "fontFamily": "Times New Roman",
+                            "fontSize": 16,
+                            "color": "white",
+                        }
+                    }
+                ],
+                "tooltip": {
+                    "show": true,
+                    "trigger": "item",
+                    "triggerOn": "mousemove|click",
+                    "axisPointer": {
+                        "type": "line"
+                    },
+                    "showContent": true,
+                    "alwaysShowContent": false,
+                    "showDelay": 0,
+                    "hideDelay": 100,
+                    "textStyle": {
+                        "fontSize": 14
+                    },
+                    "borderWidth": 0,
+                    "padding": 5
+                },
+                "xAxis": [
+                    {
+                        "show": true,
+                        "scale": false,
+                        "nameLocation": "end",
+                        "nameGap": 15,
+                        "gridIndex": 0,
+                        "inverse": false,
+                        "offset": 0,
+                        "splitNumber": 5,
+                        "minInterval": 0,
+                        "splitLine": {
+                            "show": false,
+                            "lineStyle": {
+                                "show": true,
+                                "width": 1,
+                                "opacity": 1,
+                                "curveness": 0,
+                                "type": "solid"
+                            }
+                        },
+                        "data": [
+                            "\u4e2d\u56fd",
+                            "\u5916\u56fd"
+                        ]
+                    }
+                ],
+                "yAxis": [
+                    {
+                        "type": "value",
+                        "name": "\u8bc4\u5206",
+                        "show": true,
+                        "scale": false,
+                        "nameLocation": "end",
+                        "nameGap": 5,
+                        "gridIndex": 0,
+                        "inverse": false,
+                        "offset": 0,
+                        "splitNumber": 5,
+                        "min": 8,
+                        "max": 10,
+                        "minInterval": 0,
+                        "splitLine": {
+                            "show": false,
+                            "lineStyle": {
+                                "show": true,
+                                "width": 1,
+                                "opacity": 1,
+                                "curveness": 0,
+                                "type": "solid"
+                            }
+                        }
+                    }
+                ],
+                "title": [
+                    {
+                        "padding": 5,
+                        "itemGap": 10
+                    }
+                ]
+            };
+                    chart_2781dbed78a44321bcb7738e78901270.setOption(option_2781dbed78a44321bcb7738e78901270);
+                </script>
+            </div>
+            <div style="color: white;width: 690px;height: 20px;text-align: center;margin: 20px 0;background-color: #081832;font-size: 14px;">国外电影是占据了榜单的大多数，评分情况说明国产电影中的精品也不错，和国外电影并没有太大的差距</div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>
